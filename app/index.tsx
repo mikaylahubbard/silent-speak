@@ -1,15 +1,23 @@
-import { Text, View } from "react-native";
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text, View } from "react-native";
+import CardList from "../components/events/card-list.jsx";
 
-export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+const HomeScreen = () => {
+    const router = useRouter()
+    return(
+        <View style={styles.screen}>
+            <Text>This is the home screen</Text>
+
+            <CardList />
+        </View>
+        
+    );
 }
+
+const styles = StyleSheet.create({
+    screen: {
+        padding: 20,
+    },
+})
+
+export default HomeScreen;
