@@ -8,8 +8,8 @@ const CardItem = ({id, title, description}) => {
             onPress={() => {router.push(`/card-detail?cardId=${id}&title=${title}&description=${description}`);}}
             style={styles.card}
         >
-            <Text>{title}</Text>
-            <Text>{description}</Text>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.subtitle}>{description}</Text>
         </TouchableOpacity>
     );
 }
@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginVertical: 5, 
         padding: 30
+    },
+    title: {
+        fontSize: 20
+    },
+    subtitle: {
+        fontsize: 10
     }
 })
 export default CardItem;

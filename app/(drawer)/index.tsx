@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from "react-native";
-import CardList from "../components/events/card-list.jsx";
+import CardList from "../../components/events/card-list.jsx";
 
 const HomeScreen = () => {
     const router = useRouter()

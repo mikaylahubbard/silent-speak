@@ -6,9 +6,9 @@ const CardDetailScreen = () => {
     const { cardId, title, description } = route.params
     return(
         <View style={styles.screen}>
-            <Text style={{fontSize: 20}}>This is the detail detail screen for { cardId }</Text>
+            <Text style={{fontSize: 20}}>This is the card detail screen for { cardId }</Text>
             <Text style={{fontSize: 20}}>{ title }</Text>
-            <Text style={{fontSize: 20}}>{ description }</Text>
+            <Text style={{fontSize: 10}}>{ description }</Text>
         </View>
         
     );
