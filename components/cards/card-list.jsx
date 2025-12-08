@@ -1,8 +1,8 @@
 import { FlatList, RefreshControl, View } from "react-native";
 import DUMMY_DATA from "../../data/dummy-data.jsx";
-import CardItem from "../events/card-item.jsx";
+import CardItem from "./card-item.jsx";
 
-const EventList = () => {
+const CardList = () => {
     const renderItem = ({item}) => {
         return <CardItem id={item.id} title={item.title} description={item.description}></CardItem>
     }
@@ -23,5 +23,5 @@ const EventList = () => {
     );
 }
 
-export default EventList;
+export default CardList;
 
