@@ -1,27 +1,25 @@
-import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 
 interface CardItemProps {
   id: string | number;
   title: string;
   description: string;
+  expand?: () => void;
 }
 
-const CardItem = ({ id, title, description }: CardItemProps) => {
-  const router = useRouter();
-
+const CardItem = ({ id, title, description, expand }: CardItemProps) => {
   return (
-    <TouchableOpacity
-      onPress={() =>
-        router.push({
-          pathname: "../card-detail",
-          params: { cardId: String(id), title, description },
-        })
-      }
-      style={styles.card}
-    >
-      <Text style={styles.title}>{title}</Text>
-      <Text style={{ fontSize: 14 }}>{description}</Text>
+    <TouchableOpacity style={styles.card} onPress={expand} activeOpacity={0.8}>
+      <View>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.descr}>{description}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -38,6 +36,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 4,
+  },
+  descr: {
+    fontSize: 14,
   },
 });
 export default CardItem;
