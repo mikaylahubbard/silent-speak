@@ -1,3 +1,8 @@
+// ============================================================================
+// Code edited from:
+// https://github.com/aaronksaunders/firebase-exporouter-app/blob/main/lib/firebase-config.ts
+// ============================================================================
+
 /**
  * Firebase configuration and initialization module.
  * This module handles the setup of Firebase services for the application.
@@ -5,6 +10,7 @@
  */
 
 // Import the functions you need from the SDKs you need
+import Constants from "expo-constants";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 
@@ -16,8 +22,14 @@ import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const apiKey = Constants.expoConfig?.extra?.FIREBASE_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Missing FIREBASE_API_KEY");
+}
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAREogfnKhB8x91AujkfyKZeraxv5JCX6o",
+  apiKey: apiKey,
   authDomain: "silent-speak.firebaseapp.com",
   projectId: "silent-speak",
   storageBucket: "silent-speak.firebasestorage.app",
@@ -26,6 +38,10 @@ const firebaseConfig = {
   measurementId: "G-0ZV7E008D2",
 };
 
+console.log(
+  "Firebase key loaded:",
+  !!Constants.expoConfig?.extra?.FIREBASE_API_KEY,
+);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
