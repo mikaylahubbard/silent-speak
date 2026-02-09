@@ -2,7 +2,7 @@ import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import CardList from "../../components/cards/card-list";
+import CardList from "../../../components/cards/card-list";
 
 const HomeScreen = () => {
   const [blurred, setBlurred] = useState(false);
