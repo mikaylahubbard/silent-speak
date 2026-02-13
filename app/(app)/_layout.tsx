@@ -34,7 +34,10 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen
         name="(drawer)"
-        options={{ headerShown: false, title: "My Cards" }}
+        options={{
+          headerShown: false,
+          title: "My Cards",
+        }}
       />
       <Stack.Screen name="card-detail" options={{ title: "Card" }} />
     </Stack>

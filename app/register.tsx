@@ -7,6 +7,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
  * SignUp component handles new user registration
  * @returns {JSX.Element} Sign-up form component
  */
+
 const Register = () => {
   // ============================================================================
   // Hooks & State
@@ -15,7 +16,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const { signUp } = useSession();
+  const { signUp, error, clearError } = useSession();
 
   // ============================================================================
   // Handlers
@@ -26,12 +27,7 @@ const Register = () => {
    * @returns {Promise<Models.User<Models.Preferences> | null>}
    */
   const handleRegister = async () => {
-    try {
-      return await signUp(email, password, name);
-    } catch (err) {
-      console.log("[handleRegister] ==>", err);
-      return null;
-    }
+    return await signUp(email, password, name);
   };
 
   /**
@@ -40,7 +36,7 @@ const Register = () => {
   const handleSignUpPress = async () => {
     const resp = await handleRegister();
     if (resp) {
-      router.replace("/(app)/(drawer)/(tabs)/");
+      router.replace("/");
     }
   };
 
@@ -86,15 +82,18 @@ const Register = () => {
         <View>
           <Text style={styles.label}>Password</Text>
           <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={styles.input}
             placeholder="Create a password"
+            secureTextEntry={true} // This is the key prop
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
-            textContentType="newPassword"
-            style={styles.input}
           />
         </View>
       </View>
+
+      {error && <Text style={{ color: "red", marginBottom: 12 }}>{error}</Text>}
 
       {/* Sign Up Button */}
       <Pressable onPress={handleSignUpPress} style={styles.signUpButton}>

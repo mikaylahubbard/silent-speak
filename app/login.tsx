@@ -14,7 +14,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn } = useSession();
+  const { signIn, error } = useSession();
 
   // ============================================================================
   // Handlers
@@ -38,7 +38,7 @@ const Login = () => {
    */
   const handleSignInPress = async () => {
     const resp = await handleLogin();
-    router.replace("/(app)/(drawer)/index");
+    router.replace("/");
   };
 
   // ============================================================================
@@ -80,6 +80,7 @@ const Login = () => {
           />
         </View>
       </View>
+      {error && <Text style={{ color: "red", marginBottom: 12 }}>{error}</Text>}
 
       {/* Sign In Button */}
       <Pressable onPress={handleSignInPress} style={styles.signInButton}>

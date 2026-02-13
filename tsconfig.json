@@ -3,13 +3,17 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "app/(app)/card-detail.jsx",
-    "components/cards/card-item.jsx"
+    "components/cards/card-item.jsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
   ]
 }

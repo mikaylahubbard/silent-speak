@@ -54,6 +54,8 @@ interface AuthContextType {
   user: User | null;
   /** Loading state for authentication operations */
   isLoading: boolean;
+  error: string | null;
+  clearError: () => void;
 }
 
 // ============================================================================
@@ -98,6 +100,8 @@ export function useSession(): AuthContextType {
  * @returns {JSX.Element} Provider component
  */
 export function SessionProvider(props: { children: React.ReactNode }) {
+  const [error, setError] = useState<string | null>(null);
+  const clearError = () => setError(null);
   // ============================================================================
   // State & Hooks
   // ============================================================================
@@ -146,8 +150,18 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     try {
       const response = await login(email, password);
       return response?.user;
-    } catch (error) {
+    } catch (error: any) {
       console.error("[handleSignIn error] ==>", error);
+
+      switch (error.code) {
+        case "auth/invalid-credential":
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          setError("Invalid email or password.");
+          break;
+        default:
+          setError("Something went wrong. Please try again.");
+      }
       return undefined;
     }
   };
@@ -159,16 +173,27 @@ export function SessionProvider(props: { children: React.ReactNode }) {
    * @param {string} [name] - Optional user's display name
    * @returns {Promise<User | undefined>} Created user or undefined
    */
+
   const handleSignUp = async (
     email: string,
     password: string,
     name?: string,
   ) => {
     try {
+      setError(null);
       const response = await register(email, password, name);
       return response?.user;
-    } catch (error) {
-      console.error("[handleSignUp error] ==>", error);
+    } catch (error: any) {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setError("Email already in use. Please try again.");
+          break;
+        case "auth/weak-password":
+          setError("Password must be at least 6 characters. Please try again.");
+          break;
+        default:
+          setError("Something went wrong. Please try again.");
+      }
       return undefined;
     }
   };
@@ -198,6 +223,8 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         signOut: handleSignOut,
         user,
         isLoading,
+        error,
+        clearError,
       }}
     >
       {props.children}
