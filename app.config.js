@@ -1,6 +1,5 @@
 import "dotenv/config";
 
-/** @type {import('expo/config').ExpoConfig} */
 export default {
   expo: {
     name: "silent-speak",
@@ -11,16 +10,13 @@ export default {
     scheme: "silentspeak",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
-
     extra: {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
     },
-
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.anonymous.silent-speak",
     },
-
     android: {
       adaptiveIcon: {
         backgroundColor: "#E6F4FE",
@@ -31,12 +27,10 @@ export default {
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
     },
-
     web: {
       output: "static",
       favicon: "./assets/images/favicon.png",
     },
-
     plugins: [
       "expo-router",
       [
@@ -52,7 +46,6 @@ export default {
         },
       ],
     ],
-
     experiments: {
       typedRoutes: true,
       reactCompiler: true,

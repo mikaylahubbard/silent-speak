@@ -2,6 +2,7 @@ import { useSession } from "@/context";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import "../global.css";
 
 /**
  * SignIn component handles user authentication through email and password
@@ -46,11 +47,15 @@ const Login = () => {
   // ============================================================================
 
   return (
-    <View style={styles.screen}>
+    <View className="flex-1 justify-center items-center p-4">
       {/* Welcome Section */}
-      <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeTitle}>Welcome Back</Text>
-        <Text style={styles.welcomeSubtitle}>Please sign in to continue</Text>
+      <View className="items-center mb-8">
+        <Text className="text-2xl font-bold text-gray-800 mb-2">
+          Welcome Back
+        </Text>
+        <Text className="text-sm text-gray-500">
+          Please sign in to continue
+        </Text>
       </View>
 
       {/* Form Section */}
