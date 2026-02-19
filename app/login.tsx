@@ -1,13 +1,24 @@
 import { useSession } from "@/context";
+// import { Image } from "expo-image";
 import { Link, router } from "expo-router";
+
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import "../global.css";
 
 /**
+ *
  * SignIn component handles user authentication through email and password
  * @returns {JSX.Element} Sign-in form component
  */
+
 const Login = () => {
   // ============================================================================
   // Hooks & State
@@ -49,19 +60,20 @@ const Login = () => {
   return (
     <View className="flex-1 justify-center items-center p-4">
       {/* Welcome Section */}
-      <View className="items-center mb-8">
-        <Text className="text-2xl font-bold text-gray-800 mb-2">
-          Welcome Back
-        </Text>
-        <Text className="text-sm text-gray-500">
-          Please sign in to continue
-        </Text>
-      </View>
+
+      <Image
+        className="h-auto w-80"
+        source={require("../assets/images/silent_speak_transparent_logo.png")}
+        resizeMode="contain"
+      />
+      {/* <Text className="text-sm text-gray-500">Welcome back</Text> */}
 
       {/* Form Section */}
-      <View style={styles.formContainer}>
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Email</Text>
+      <View className="w-full max-w-[300px] mb-8">
+        <View className="mb-4">
+          <Text className="text-sm font-medium text-gray-700 mb-1 ml-1">
+            Email
+          </Text>
           <TextInput
             placeholder="name@mail.com"
             value={email}
@@ -69,38 +81,46 @@ const Login = () => {
             textContentType="emailAddress"
             keyboardType="email-address"
             autoCapitalize="none"
-            style={styles.input}
+            className="w-full p-3 border border-gray-300 rounded-lg text-base bg-white"
           />
         </View>
 
         <View>
-          <Text style={styles.label}>Password</Text>
+          <Text className="text-sm font-medium text-gray-700 mb-1 ml-1">
+            Password
+          </Text>
           <TextInput
             placeholder="Your password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
             textContentType="password"
-            style={styles.input}
+            className="w-full p-3 border border-gray-300 rounded-lg text-base bg-white"
           />
         </View>
       </View>
       {error && <Text style={{ color: "red", marginBottom: 12 }}>{error}</Text>}
 
       {/* Sign In Button */}
-      <Pressable onPress={handleSignInPress} style={styles.signInButton}>
-        <Text style={styles.signInText}>Sign In</Text>
+      <Pressable
+        onPress={handleSignInPress}
+        className="bg-neutral-700 w-4/12 max-w-[300px] py-3 rounded-lg"
+      >
+        <Text className="text-white text-base font-semibold text-center">
+          Log In
+        </Text>
       </Pressable>
 
       {/* Sign Up Link */}
-      <View style={styles.signUpContainer}>
-        <Text style={styles.signUpText}>Don&apos;t have an account?</Text>
-        <Link href="/register" asChild style={styles.signUpLink}>
-          <Pressable>
-            <Text style={styles.signUpLinkText}>Register</Text>
-          </Pressable>
-        </Link>
-      </View>
+
+      <Text className="text-gray-600 pt-5 pb-2">
+        Don&apos;t have an account?
+      </Text>
+      <Link href="/register" asChild className="ml-2">
+        <Pressable>
+          <Text className="text-blue-600 font-semibold">Register Now</Text>
+        </Pressable>
+      </Link>
     </View>
   );
 };
