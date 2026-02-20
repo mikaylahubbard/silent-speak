@@ -6,7 +6,7 @@ export default {
     slug: "silent-speak",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/silent_speak_icon.png",
     scheme: "silentspeak",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
@@ -36,13 +36,14 @@ export default {
       [
         "expo-splash-screen",
         {
-          image: "./assets/images/splash-icon.png",
-          imageWidth: 200,
-          resizeMode: "contain",
+          image: "./assets/images/silent_speak_icon.png",
           backgroundColor: "#ffffff",
           dark: {
-            backgroundColor: "#000000",
+            image: "./assets/images/silent_speak_icon_dark_mode.png",
+            backgroundColor: "#545454",
           },
+          imageWidth: 200,
+          resizeMode: "contain",
         },
       ],
     ],

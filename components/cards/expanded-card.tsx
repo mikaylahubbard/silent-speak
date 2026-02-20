@@ -18,10 +18,13 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.overlay} pointerEvents="box-none">
-      <TouchableOpacity style={styles.backdrop} onPress={onClose} />
-      <View style={styles.floatingCard}>
-        <View style={styles.iconRow}>
+    <View
+      className="absolute inset-0 z-[1000] justify-center items-center"
+      pointerEvents="box-none"
+    >
+      <TouchableOpacity className="absolute inset-0" onPress={onClose} />
+      <View className="w-[85%] bg-white rounded-2xl p-5">
+        <View className="flex-row justify-between">
           <TouchableOpacity onPress={() => setIsFullScreen(true)}>
             <Feather name="maximize" size={24} color="black" />
           </TouchableOpacity>
@@ -29,8 +32,10 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
             <Feather name="x" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>{card.title}</Text>
-        <Text style={styles.description}>{card.description}</Text>
+        <Text className="text-3xl font-bold text-center pt-5">
+          {card.title}
+        </Text>
+        <Text className="text-base mt-2 pb-12">{card.description}</Text>
       </View>
 
       {/* Fullscreen Modal */}
@@ -38,8 +43,11 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
         visible={isFullScreen}
         onRequestClose={() => setIsFullScreen(false)}
       >
-        <View style={styles.fullScreenContainer}>
-          <View style={[styles.iconRowFullscreen, { top: insets.top }]}>
+        <View className="flex-1 bg-white justify-center items-center w-full h-full p-3">
+          <View
+            className="absolute left-0 right-0 flex-row justify-between p-4"
+            style={{ top: insets.top }}
+          >
             <TouchableOpacity onPress={() => setIsFullScreen(false)}>
               <Feather name="minimize" size={24} color="black" />
             </TouchableOpacity>
@@ -47,9 +55,14 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
               <Feather name="x" size={24} color="black" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.largeTitle}>{card.title}</Text>
-          <Text style={styles.largeDescription}>{card.description}</Text>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <Text className="text-5xl font-bold text-center p-3 mt-10">
+            {card.title}
+          </Text>
+          <Text className="text-xl p-3 mt-4">{card.description}</Text>
+          <TouchableOpacity
+            onPress={onClose}
+            className="mt-5 p-3 bg-gray-300 rounded-full"
+          >
             <Text>Close</Text>
           </TouchableOpacity>
         </View>

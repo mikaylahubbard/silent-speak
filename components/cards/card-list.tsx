@@ -40,7 +40,7 @@ const CardList = ({ onExpand, onClose }: CardListProps) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View className="flex-1">
       <FlatList
         data={DUMMY_DATA}
         keyExtractor={(item) => item.id.toString()}

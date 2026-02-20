@@ -3,14 +3,7 @@ import { useSession } from "@/context";
 import { Link, router } from "expo-router";
 
 import { useState } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Image, Pressable, Text, TextInput, View } from "react-native";
 import "../global.css";
 
 /**
@@ -62,11 +55,13 @@ const Login = () => {
       {/* Welcome Section */}
 
       <Image
-        className="h-auto w-80"
+        className="h-36 w-auto"
         source={require("../assets/images/silent_speak_transparent_logo.png")}
         resizeMode="contain"
       />
-      {/* <Text className="text-sm text-gray-500">Welcome back</Text> */}
+      <Text className="text-sm text-gray-500 py-3">
+        Communicate on Your Terms
+      </Text>
 
       {/* Form Section */}
       <View className="w-full max-w-[300px] mb-8">
@@ -124,89 +119,5 @@ const Login = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  // Screen container
-  screen: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-
-  // Welcome section
-  welcomeContainer: {
-    alignItems: "center",
-    marginBottom: 32,
-  },
-  welcomeTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#1f2937", // gray-800
-    marginBottom: 8,
-  },
-  welcomeSubtitle: {
-    fontSize: 14,
-    color: "#6b7280", // gray-500
-  },
-
-  // Form section
-  formContainer: {
-    width: "100%",
-    maxWidth: 300,
-    marginBottom: 32,
-  },
-  formGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#374151", // gray-700
-    marginBottom: 4,
-    marginLeft: 4,
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#d1d5db", // gray-300
-    borderRadius: 8,
-    fontSize: 16,
-    backgroundColor: "#ffffff",
-  },
-
-  // Sign in button
-  signInButton: {
-    backgroundColor: "#2563eb", // blue-600
-    width: "100%",
-    maxWidth: 300,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  signInText: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-
-  // Sign up section
-  signUpContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 24,
-  },
-  signUpText: {
-    color: "#4b5563", // gray-600
-  },
-  signUpLink: {
-    marginLeft: 8,
-  },
-  signUpLinkText: {
-    color: "#2563eb", // blue-600
-    fontWeight: "600",
-  },
-});
 
 export default Login;

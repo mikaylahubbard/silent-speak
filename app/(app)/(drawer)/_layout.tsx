@@ -8,7 +8,7 @@ import {
 } from "@react-navigation/drawer";
 import { router } from "expo-router";
 import { Drawer } from "expo-router/drawer";
-import { Button } from "react-native";
+import { Image, Pressable, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
@@ -21,7 +21,13 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
 
 export default function DrawerLayout() {
   const { signOut, user } = useSession();
-
+  const LogoTitle = () => (
+    <Image
+      className="w-36 h-auto"
+      source={require("../../../assets/images/silent_speak_long_logo.png")}
+      resizeMode="contain"
+    />
+  );
   const handleLogout = async () => {
     await signOut();
     router.replace("/login");
@@ -30,23 +36,37 @@ export default function DrawerLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
         drawerContent={CustomDrawerContent}
-        screenOptions={{ drawerHideStatusBarOnOpen: true }}
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#d4d4d4",
+          },
+          drawerStyle: {
+            backgroundColor: "#f5f5f5",
+          },
+          drawerActiveTintColor: "#f5f5f5",
+          drawerActiveBackgroundColor: "#525252",
+          headerTintColor: "#262626",
+          drawerHideStatusBarOnOpen: true,
+        }}
       >
         <Drawer.Screen
           name="index"
           options={{
             drawerLabel: "Home",
             title: "My Cards",
+            headerTitle: () => <LogoTitle />,
             drawerIcon: ({ color, size }) => (
               <Ionicons name="home" size={size} color={color} />
             ),
             headerRight: () => (
-              <Button
+              <Pressable
                 onPress={() => {
                   handleLogout();
                 }}
-                title="Log out"
-              />
+                className="pe-4"
+              >
+                <Text className="text-violet-950 font-semibold">Log out</Text>
+              </Pressable>
             ),
           }}
         />
@@ -61,6 +81,16 @@ export default function DrawerLayout() {
                 size={size}
                 color={color}
               />
+            ),
+            headerRight: () => (
+              <Pressable
+                onPress={() => {
+                  handleLogout();
+                }}
+                className="pe-4"
+              >
+                <Text className="text-violet-950 font-semibold">Log out</Text>
+              </Pressable>
             ),
           }}
         />
