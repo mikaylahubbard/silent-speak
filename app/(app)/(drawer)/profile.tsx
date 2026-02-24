@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { Switch, Text, View } from "react-native";
 import { auth } from "../../../lib/firebase-config";
 export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
@@ -83,40 +83,3 @@ export default function Profile() {
       </View>
     );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-  header: {
-    alignItems: "center",
-    paddingTop: 70,
-    backgroundColor: "#fff",
-  },
-  body: {
-    padding: 30,
-  },
-  line: {
-    borderBottomColor: "lightgray",
-    borderBottomWidth: 1,
-    marginVertical: 10,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: "600",
-  },
-  email: {
-    fontSize: 16,
-    color: "gray",
-    marginBottom: 40,
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: "bold",
-    alignSelf: "flex-start",
-    marginTop: 24,
-  },
-  text: {
-    padding: 10,
-  },
-});
