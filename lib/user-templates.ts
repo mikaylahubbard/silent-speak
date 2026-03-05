@@ -7,9 +7,9 @@ export const defaultSettings = () => ({
   colorTheme: "violet",
 });
 
-export const defaultUserDocument = (user: User) => ({
+export const defaultUserDocument = (user: User, name?: string) => ({
   profile: {
-    name: user.displayName || " ",
+    name: name || user.displayName || " ",
     email: user.email || " ",
     phoneNumber: "-",
     age: "-",

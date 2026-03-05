@@ -10,7 +10,7 @@
 
 import { auth, db } from "@/lib/firebase-config";
 import { login, logout, register } from "@/lib/firebase-service";
-import { User, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { User, onAuthStateChanged } from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -110,12 +110,14 @@ export function useSession(): AuthContextType {
  */
 export function SessionProvider(props: { children: React.ReactNode }) {
   //find the user documents in the database
-  const ensureUserDocument = async (firebaseUser: User) => {
+  const ensureUserDocument = async (firebaseUser: User, name?: string) => {
+    // console.log("Name passed to ensureUserDocument:", name);
+    // console.log("Firebase displayName:", firebaseUser.displayName);
     const userRef = doc(db, "users", firebaseUser.uid);
     const snapshot = await getDoc(userRef);
     // create default user document in the database
     if (!snapshot.exists()) {
-      await setDoc(userRef, defaultUserDocument(firebaseUser));
+      await setDoc(userRef, defaultUserDocument(firebaseUser, name));
       const cardsRef = collection(userRef, "cards");
 
       for (const card of defaultCards()) {
@@ -158,7 +160,7 @@ export function SessionProvider(props: { children: React.ReactNode }) {
       if (firebaseUser) {
         setUser(firebaseUser);
         setIsLoading(false);
-        await ensureUserDocument(firebaseUser);
+        ensureUserDocument(firebaseUser).catch(console.error);
       } else {
         setUser(null);
         setIsLoading(false);
@@ -215,15 +217,9 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     try {
       setError(null);
       const response = await register(email, password, name);
-      // add display name
-      if (response?.user && name) {
-        await updateProfile(response.user, {
-          displayName: name,
-        });
-        // refresh user object
-        await response.user.reload();
-        // check for / set up firestore data
-        await ensureUserDocument(response.user);
+      if (response?.user) {
+        // Pass 'name' explicitly to ensure the DB record gets it
+        await ensureUserDocument(response.user, name);
       }
 
       return response?.user;

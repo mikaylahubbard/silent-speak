@@ -4,12 +4,12 @@
 // ============================================================================
 
 import {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    updateProfile,
-    User,
-    UserCredential,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+  User,
+  UserCredential,
 } from "firebase/auth";
 
 import { auth } from "./firebase-config";
@@ -78,9 +78,10 @@ export async function register(
       password,
     );
     // optional field
-    if (name) {
-      await updateProfile(userCredential.user, { displayName: name });
-    }
+
+    await updateProfile(userCredential.user, { displayName: name });
+    await userCredential.user.reload();
+
     return { user: userCredential.user };
   } catch (error) {
     console.error("[error registering] ==>", error);
