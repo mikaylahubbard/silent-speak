@@ -43,9 +43,12 @@ const Login = () => {
    */
   const handleSignInPress = async () => {
     const resp = await handleLogin();
-    router.replace("/");
+    if (resp) {
+      router.replace("/");
+    } else {
+      console.log("Login failed, staying on login page.");
+    }
   };
-
   // ============================================================================
   // Render
   // ============================================================================

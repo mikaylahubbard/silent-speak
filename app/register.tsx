@@ -1,14 +1,7 @@
 import { useSession } from "@/context";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Image, Pressable, Text, TextInput, View } from "react-native";
 
 /**
  * SignUp component handles new user registration
@@ -23,7 +16,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const { signUp, error, clearError } = useSession();
+  const { signUp, error, clearError, signOut } = useSession();
 
   // ============================================================================
   // Handlers
@@ -41,12 +34,9 @@ const Register = () => {
    * Handles the sign-up button press
    */
   const handleSignUpPress = async () => {
-    const resp = await handleRegister();
-    if (resp) {
-      router.replace("/");
-    }
+    await handleRegister();
+    router.replace("/");
   };
-
   // ============================================================================
   // Render
   // ============================================================================
@@ -132,89 +122,4 @@ const Register = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  // Screen container
-  screen: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-
-  // Welcome section
-  welcomeContainer: {
-    alignItems: "center",
-    marginBottom: 32,
-  },
-  welcomeTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#1f2937", // gray-800
-    marginBottom: 8,
-  },
-  welcomeSubtitle: {
-    fontSize: 14,
-    color: "#6b7280", // gray-500
-  },
-
-  // Form section
-  formContainer: {
-    width: "100%",
-    maxWidth: 300,
-    marginBottom: 32,
-  },
-  formGroup: {
-    marginBottom: 16, // replaces space-y-4
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#374151", // gray-700
-    marginBottom: 4,
-    marginLeft: 4,
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#d1d5db", // gray-300
-    borderRadius: 8,
-    fontSize: 16,
-    backgroundColor: "#ffffff",
-  },
-
-  // Sign up button
-  signUpButton: {
-    backgroundColor: "#2563eb", // blue-600
-    width: "100%",
-    maxWidth: 300,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  signUpText: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-
-  // Sign in link section
-  signInContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 24,
-  },
-  signInText: {
-    color: "#4b5563", // gray-600
-  },
-  signInLink: {
-    marginLeft: 8,
-  },
-  signInLinkText: {
-    color: "#2563eb", // blue-600
-    fontWeight: "600",
-  },
-});
-
 export default Register;

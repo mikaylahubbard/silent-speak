@@ -8,10 +8,19 @@
  * @module
  */
 
-import { auth } from "@/lib/firebase-config";
+import { auth, db } from "@/lib/firebase-config";
 import { login, logout, register } from "@/lib/firebase-service";
-import { User, onAuthStateChanged } from "firebase/auth";
+import { User, onAuthStateChanged, updateProfile } from "firebase/auth";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { defaultCards, defaultUserDocument } from "../lib/user-templates";
 
 // ============================================================================
 // Types & Interfaces
@@ -100,6 +109,24 @@ export function useSession(): AuthContextType {
  * @returns {JSX.Element} Provider component
  */
 export function SessionProvider(props: { children: React.ReactNode }) {
+  //find the user documents in the database
+  const ensureUserDocument = async (firebaseUser: User) => {
+    const userRef = doc(db, "users", firebaseUser.uid);
+    const snapshot = await getDoc(userRef);
+    // create default user document in the database
+    if (!snapshot.exists()) {
+      await setDoc(userRef, defaultUserDocument(firebaseUser));
+      const cardsRef = collection(userRef, "cards");
+
+      for (const card of defaultCards()) {
+        await addDoc(cardsRef, {
+          ...card,
+          createdAt: serverTimestamp(),
+        });
+      }
+    }
+  };
+
   const [error, setError] = useState<string | null>(null);
   const clearError = () => setError(null);
   // ============================================================================
@@ -127,9 +154,15 @@ export function SessionProvider(props: { children: React.ReactNode }) {
    * Automatically updates user state on auth changes
    */
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setIsLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        setIsLoading(false);
+        await ensureUserDocument(firebaseUser);
+      } else {
+        setUser(null);
+        setIsLoading(false);
+      }
     });
 
     // Cleanup subscription on unmount
@@ -182,6 +215,17 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     try {
       setError(null);
       const response = await register(email, password, name);
+      // add display name
+      if (response?.user && name) {
+        await updateProfile(response.user, {
+          displayName: name,
+        });
+        // refresh user object
+        await response.user.reload();
+        // check for / set up firestore data
+        await ensureUserDocument(response.user);
+      }
+
       return response?.user;
     } catch (error: any) {
       switch (error.code) {

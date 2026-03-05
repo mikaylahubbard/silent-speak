@@ -12,11 +12,12 @@
 // Import the functions you need from the SDKs you need
 import Constants from "expo-constants";
 // import { getAnalytics } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
-
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 // @ts-ignore: getReactNativePersistence exists in the RN bundle
 import { getReactNativePersistence, initializeAuth } from "firebase/auth";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -46,6 +47,9 @@ console.log(
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+
 /**
  * Initialize Firebase Authentication service
  * @type {Auth}
@@ -54,5 +58,5 @@ const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
-export { auth };
+export { auth, db };
 export default app;
