@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FlatList, RefreshControl, View } from "react-native";
-import DUMMY_DATA from "../../data/dummy-data";
 import CardItem from "./card-item";
 import ExpandedCardOverlay from "./expanded-card";
 
@@ -13,9 +12,10 @@ interface Card {
 interface CardListProps {
   onExpand?: () => void;
   onClose?: () => void;
+  cards: any[];
 }
 
-const CardList = ({ onExpand, onClose }: CardListProps) => {
+const CardList = ({ onExpand, onClose, cards }: CardListProps) => {
   const [activeCard, setActiveCard] = useState<Card | null>(null);
 
   const handleExpand = (card: Card) => {
@@ -42,7 +42,7 @@ const CardList = ({ onExpand, onClose }: CardListProps) => {
   return (
     <View className="flex-1">
       <FlatList
-        data={DUMMY_DATA}
+        data={cards}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         refreshControl={

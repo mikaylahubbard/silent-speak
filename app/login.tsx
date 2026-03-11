@@ -19,7 +19,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, error } = useSession();
+  const { signIn, error, clearError } = useSession();
 
   // ============================================================================
   // Handlers
@@ -76,6 +76,7 @@ const Login = () => {
             placeholder="name@mail.com"
             value={email}
             onChangeText={setEmail}
+            onFocus={clearError}
             textContentType="emailAddress"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -91,6 +92,7 @@ const Login = () => {
             placeholder="Your password"
             value={password}
             onChangeText={setPassword}
+            onFocus={clearError}
             secureTextEntry
             textContentType="password"
             className="w-full p-3 border border-gray-300 rounded-lg text-base bg-white"

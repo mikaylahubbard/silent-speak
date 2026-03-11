@@ -66,25 +66,20 @@ export async function logout(): Promise<void> {
   }
 }
 
-export async function register(
-  email: string,
-  password: string,
-  name?: string,
-): Promise<FirebaseUserResponse | undefined> {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    // optional field
+export async function register(email: string, password: string, name?: string) {
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
 
-    await updateProfile(userCredential.user, { displayName: name });
+  if (name) {
+    await updateProfile(userCredential.user, {
+      displayName: name,
+    });
+
     await userCredential.user.reload();
-
-    return { user: userCredential.user };
-  } catch (error) {
-    console.error("[error registering] ==>", error);
-    throw error;
   }
+
+  return userCredential;
 }

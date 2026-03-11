@@ -64,6 +64,7 @@ const Register = () => {
             placeholder="Your full name"
             value={name}
             onChangeText={setName}
+            onFocus={clearError}
             textContentType="name"
             autoCapitalize="words"
             className="w-full p-3 border border-gray-300 rounded-lg text-base bg-white"
@@ -77,6 +78,7 @@ const Register = () => {
             placeholder="name@mail.com"
             value={email}
             onChangeText={setEmail}
+            onFocus={clearError}
             textContentType="emailAddress"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -94,6 +96,7 @@ const Register = () => {
             secureTextEntry={true} // This is the key prop
             value={password}
             onChangeText={setPassword}
+            onFocus={clearError}
             className="w-full p-3 border border-gray-300 rounded-lg text-base bg-white"
           />
         </View>

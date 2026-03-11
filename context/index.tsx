@@ -16,6 +16,7 @@ import {
   collection,
   doc,
   getDoc,
+  onSnapshot,
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
@@ -61,6 +62,8 @@ interface AuthContextType {
 
   /** Currently authenticated user */
   user: User | null;
+  userDoc: any | null;
+  cards: any | null;
   /** Loading state for authentication operations */
   isLoading: boolean;
   error: string | null;
@@ -108,16 +111,21 @@ export function useSession(): AuthContextType {
  * @param {React.ReactNode} props.children - Child components
  * @returns {JSX.Element} Provider component
  */
+
 export function SessionProvider(props: { children: React.ReactNode }) {
   //find the user documents in the database
-  const ensureUserDocument = async (firebaseUser: User, name?: string) => {
-    // console.log("Name passed to ensureUserDocument:", name);
-    // console.log("Firebase displayName:", firebaseUser.displayName);
+  const ensureUserDocument = async (firebaseUser: User) => {
     const userRef = doc(db, "users", firebaseUser.uid);
     const snapshot = await getDoc(userRef);
-    // create default user document in the database
+
+    console.log("name: :", firebaseUser.displayName ?? "user");
+
     if (!snapshot.exists()) {
-      await setDoc(userRef, defaultUserDocument(firebaseUser, name));
+      await setDoc(
+        userRef,
+        defaultUserDocument(firebaseUser, firebaseUser.displayName ?? "User"),
+      );
+
       const cardsRef = collection(userRef, "cards");
 
       for (const card of defaultCards()) {
@@ -140,6 +148,34 @@ export function SessionProvider(props: { children: React.ReactNode }) {
    * @type {[User | null, React.Dispatch<React.SetStateAction<User | null>>]}
    */
   const [user, setUser] = useState<User | null>(null);
+  const [userDoc, setUserDoc] = useState<any | null>(null);
+  const [cards, setCards] = useState<any | null>(null);
+
+  const setUserDocument = async (uid: string) => {
+    try {
+      const userRef = doc(db, "users", uid);
+      const snapshot = await getDoc(userRef);
+
+      if (snapshot.exists()) {
+        setUserDoc(snapshot.data());
+      }
+    } catch (error) {
+      console.error("Error fetching user document:", error);
+    }
+  };
+  let unsubscribeCards: (() => void) | null = null;
+  const setUserCards = (uid: string) => {
+    const cardsRef = collection(db, "users", uid, "cards");
+
+    unsubscribeCards = onSnapshot(cardsRef, (snapshot) => {
+      const cardsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setCards(cardsData);
+    });
+  };
 
   /**
    * Loading state for authentication operations
@@ -159,16 +195,32 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
+
+        await ensureUserDocument(firebaseUser);
+        await setUserDocument(firebaseUser.uid);
+        await setUserCards(firebaseUser.uid);
+
         setIsLoading(false);
-        ensureUserDocument(firebaseUser).catch(console.error);
       } else {
         setUser(null);
+        setCards([]);
+
+        if (unsubscribeCards) {
+          unsubscribeCards();
+          unsubscribeCards = null;
+        }
         setIsLoading(false);
       }
     });
 
     // Cleanup subscription on unmount
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+
+      if (unsubscribeCards) {
+        unsubscribeCards();
+      }
+    };
   }, []);
 
   // ============================================================================
@@ -217,10 +269,10 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     try {
       setError(null);
       const response = await register(email, password, name);
-      if (response?.user) {
-        // Pass 'name' explicitly to ensure the DB record gets it
-        await ensureUserDocument(response.user, name);
-      }
+      // if (response?.user) {
+      //   // Pass 'name' explicitly to ensure the DB record gets it
+      //   await ensureUserDocument(response.user, name);
+      // }
 
       return response?.user;
     } catch (error: any) {
@@ -262,6 +314,8 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         signUp: handleSignUp,
         signOut: handleSignOut,
         user,
+        userDoc,
+        cards,
         isLoading,
         error,
         clearError,
