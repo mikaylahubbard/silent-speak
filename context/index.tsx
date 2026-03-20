@@ -64,6 +64,7 @@ interface AuthContextType {
   user: User | null;
   userDoc: any | null;
   cards: any | null;
+  addCard: (title: string, message: string) => void;
   /** Loading state for authentication operations */
   isLoading: boolean;
   error: string | null;
@@ -303,6 +304,25 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     }
   };
 
+  const addCard = async (title: string, message: string) => {
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    const newCard = { title, description: message };
+    try {
+      const cardsRef = collection(db, "users", user.uid, "cards");
+
+      const docRef = await addDoc(cardsRef, {
+        ...newCard,
+        createdAt: serverTimestamp(),
+      });
+
+      // setCards((prev: any) => [...prev, { ...newCard, id: docRef.id }]);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
   // ============================================================================
   // Render
   // ============================================================================
@@ -316,6 +336,7 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         user,
         userDoc,
         cards,
+        addCard,
         isLoading,
         error,
         clearError,

@@ -1,14 +1,17 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { TextInput, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 // NativeWind classes are applied via the 'className' prop
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
+  const size = 32;
+  const color = "#59168B";
 
   return (
-    <View className="p-2 flex mx-3 bg-white rounded-lg">
+    <View className="p-2 flex flex-row bg-white rounded-lg w-full items-center drop-shadow-lg">
       <TextInput
-        className="h-10 px-4 w-full border border-gray-300 rounded-md focus:border-violet-500"
+        className="h-10 px-4 flex-1 border border-gray-300 rounded-md focus:border-violet-500"
         placeholder="Search..."
         value={query}
         onChangeText={(text) => {
@@ -16,6 +19,9 @@ const SearchBar = () => {
           //   onSearch(text); // Trigger search logic in parent component
         }}
       />
+      <Pressable className="ps-2">
+        <MaterialIcons name="search" size={size} color={color} />
+      </Pressable>
     </View>
   );
 };
