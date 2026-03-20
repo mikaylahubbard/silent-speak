@@ -150,7 +150,7 @@ export function SessionProvider(props: { children: React.ReactNode }) {
    */
   const [user, setUser] = useState<User | null>(null);
   const [userDoc, setUserDoc] = useState<any | null>(null);
-  const [cards, setCards] = useState<any | null>(null);
+  const [cards, setCards] = useState<any[]>([]);
 
   const setUserDocument = async (uid: string) => {
     try {
@@ -323,6 +323,7 @@ export function SessionProvider(props: { children: React.ReactNode }) {
       console.error("Error adding document: ", e);
     }
   };
+
   // ============================================================================
   // Render
   // ============================================================================

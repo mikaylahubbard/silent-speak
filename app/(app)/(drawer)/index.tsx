@@ -1,7 +1,7 @@
 import { useSession } from "@/context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import NewCardModal from "@/components/forms/new-card";
@@ -14,24 +14,30 @@ const HomeScreen = () => {
   const { userDoc, cards, addCard } = useSession();
   const [editingMode, setEditingMode] = useState(false);
   const [newCardMode, setNewCardMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const size = 42;
   const color = "#59168B";
 
-  const sortedCards = cards.sort((a: { title: string }, b: { title: string }) =>
-    a.title.toLowerCase().localeCompare(b.title.toLowerCase()),
-  );
-
-  console.log(cards);
+  const filteredAndSortedCards = React.useMemo(() => {
+    return [...(cards || [])]
+      .filter(
+        (card) => card.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        // || card.description.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+      .sort((a, b) =>
+        a.title.toLowerCase().localeCompare(b.title.toLowerCase()),
+      );
+  }, [cards, searchQuery]);
 
   return (
     <View className="flex-1 px-4 pt-2 bg-white">
       {/* NEEDS IMPLEMENTED */}
-      <SearchBar />
+      <SearchBar query={searchQuery} onSearch={setSearchQuery} />
 
       <CardList
         onExpand={() => setBlurred(true)}
         onClose={() => setBlurred(false)}
-        cards={sortedCards}
+        cards={filteredAndSortedCards}
       />
 
       <View className="absolute inset-3 justify-end px-6 pb-6">

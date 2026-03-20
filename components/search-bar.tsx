@@ -1,10 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import { Pressable, TextInput, View } from "react-native";
 // NativeWind classes are applied via the 'className' prop
 
-const SearchBar = () => {
-  const [query, setQuery] = useState("");
+interface SearchBarProps {
+  query: string;
+  onSearch: (text: string) => void;
+}
+
+const SearchBar = ({ query, onSearch }: SearchBarProps) => {
   const size = 32;
   const color = "#59168B";
 
@@ -15,8 +19,7 @@ const SearchBar = () => {
         placeholder="Search..."
         value={query}
         onChangeText={(text) => {
-          setQuery(text);
-          //   onSearch(text); // Trigger search logic in parent component
+          onSearch(text);
         }}
       />
       <Pressable className="ps-2">
