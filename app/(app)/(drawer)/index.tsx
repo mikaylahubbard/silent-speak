@@ -2,7 +2,7 @@ import { useSession } from "@/context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import NewCardModal from "@/components/forms/new-card";
 import CardList from "../../../components/cards/card-list";
@@ -38,20 +38,36 @@ const HomeScreen = () => {
         onExpand={() => setBlurred(true)}
         onClose={() => setBlurred(false)}
         cards={filteredAndSortedCards}
+        isEditing={editingMode}
+        color={color}
       />
 
       <View className="absolute inset-3 justify-end px-6 pb-6">
+        {editingMode && (
+          <Pressable
+            className=" w-4/12 max-w-[300px] py-3 rounded-lg ml-auto my-5"
+            style={{ backgroundColor: color }}
+            onPress={() => setEditingMode(false)}
+          >
+            <Text className="text-white text-base font-semibold text-center">
+              Done Editing
+            </Text>
+          </Pressable>
+        )}
         <View className="flex-row justify-between">
           {/* add a card */}
           <Pressable
-            className=" bg-white p-2 rounded-full shadow-slate-100"
+            className="bg-white p-2 rounded-full shadow-slate-100"
             onPress={() => setNewCardMode(true)}
           >
             <MaterialIcons name="add" size={size} color={color} />
           </Pressable>
 
           {/* enter edit mode: this should allow you to delete or edit individual cards */}
-          <Pressable className="bg-white p-2 rounded-full shadow-slate-100">
+          <Pressable
+            className="bg-white p-2 rounded-full shadow-slate-100"
+            onPress={() => setEditingMode(true)}
+          >
             <MaterialIcons name="create" size={size} color={color} />
           </Pressable>
         </View>

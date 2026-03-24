@@ -14,11 +14,13 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
   serverTimestamp,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { defaultCards, defaultUserDocument } from "../lib/user-templates";
@@ -65,6 +67,8 @@ interface AuthContextType {
   userDoc: any | null;
   cards: any | null;
   addCard: (title: string, message: string) => void;
+  deleteCard: (id: string) => void;
+  editCard: (title: string, description: string, id: string) => void;
   /** Loading state for authentication operations */
   isLoading: boolean;
   error: string | null;
@@ -324,6 +328,35 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     }
   };
 
+  const deleteCard = async (id: string) => {
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    try {
+      const cardRef = doc(db, "users", user.uid, "cards", id);
+      await deleteDoc(cardRef);
+    } catch (e) {
+      console.error("Error deleting document: ", e);
+    }
+  };
+
+  const editCard = async (title: string, description: string, id: string) => {
+    console.log("EDITING CARD:", { title, description, id });
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    try {
+      const cardRef = doc(db, "users", user.uid, "cards", id);
+      await updateDoc(cardRef, {
+        title: title,
+        description: description,
+        editedAt: new Date(),
+      });
+    } catch (e) {
+      console.error("Error editing document: ", e);
+    }
+  };
+
   // ============================================================================
   // Render
   // ============================================================================
@@ -338,6 +371,8 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         userDoc,
         cards,
         addCard,
+        deleteCard,
+        editCard,
         isLoading,
         error,
         clearError,
