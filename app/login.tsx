@@ -2,6 +2,7 @@ import { useSession } from "@/context";
 // import { Image } from "expo-image";
 import { Link, router } from "expo-router";
 
+import ChangePasswordModal from "@/components/forms/password-reset";
 import { useState } from "react";
 import { Image, Pressable, Text, TextInput, View } from "react-native";
 import "../global.css";
@@ -19,7 +20,9 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, error, clearError } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, error, clearError, handleForgotPassword } = useSession();
+  const [changePassword, setChangePassword] = useState(false);
 
   // ============================================================================
   // Handlers
@@ -42,7 +45,11 @@ const Login = () => {
    * Handles the sign-in button press
    */
   const handleSignInPress = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     const resp = await handleLogin();
+    setIsLoading(false);
     if (resp) {
       router.replace("/");
     } else {
@@ -98,16 +105,30 @@ const Login = () => {
             className="w-full p-3 border border-gray-300 rounded-lg text-base bg-white"
           />
         </View>
+        <View className="flex-row mt-2 ml-1">
+          <Text className="text-gray-600 text-xs">Forgot Password?</Text>
+          <Pressable
+            onPress={() => {
+              setChangePassword(true);
+            }}
+          >
+            <Text className="text-blue-600 font-semibold text-xs ms-1">
+              Click Here
+            </Text>
+          </Pressable>
+        </View>
       </View>
+
       {error && <Text style={{ color: "red", marginBottom: 12 }}>{error}</Text>}
 
       {/* Sign In Button */}
       <Pressable
         onPress={handleSignInPress}
+        disabled={isLoading}
         className="bg-neutral-700 w-4/12 max-w-[300px] py-3 rounded-lg"
       >
         <Text className="text-white text-base font-semibold text-center">
-          Log In
+          {isLoading ? "Signing in..." : "Log In"}
         </Text>
       </Pressable>
 
@@ -117,10 +138,18 @@ const Login = () => {
         Don&apos;t have an account?
       </Text>
       <Link href="/register" asChild className="ml-2">
-        <Pressable>
+        <Pressable onPress={clearError}>
           <Text className="text-blue-600 font-semibold">Register Now</Text>
         </Pressable>
       </Link>
+      {/* This needs to be changed/edited, as from the login page, the user hasn't been authenticated yet */}
+
+      <ChangePasswordModal
+        visible={changePassword}
+        onClose={() => setChangePassword(false)}
+        onSubmit={handleForgotPassword}
+        showEmailInput={true}
+      />
     </View>
   );
 };

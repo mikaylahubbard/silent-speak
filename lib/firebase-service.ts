@@ -9,7 +9,7 @@ import {
   signOut,
   updateProfile,
   User,
-  UserCredential,
+  UserCredential
 } from "firebase/auth";
 
 import { auth } from "./firebase-config";

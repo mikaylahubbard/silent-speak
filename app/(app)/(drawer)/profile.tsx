@@ -1,28 +1,50 @@
+import EditProfileModal from "@/components/forms/edit-profile";
+import EmailVerificationModal from "@/components/forms/email-verification";
+import ChangePasswordModal from "@/components/forms/password-reset";
 import { useSession } from "@/context";
 import React, { useEffect, useState } from "react";
-import { Switch, Text, View } from "react-native";
+import { Pressable, Switch, Text, View } from "react-native";
 
 export default function Profile() {
-  const { userDoc } = useSession();
+  const { userDoc, handleForgotPassword, user, sendNewEmailVerification } =
+    useSession();
   const profile = userDoc?.profile;
 
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [chagePassword, setChangePassword] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [needsVerified, setNeedsVerified] = useState(user?.emailVerified);
 
-  const [form, setForm] = useState({
-    username: "",
-    phone: "",
-    age: "",
-  });
+  const checkEmailVerificationStatus = async () => {
+    if (!user) return;
+    await user.reload();
+    console.log(user.emailVerified);
+
+    if (user.emailVerified) {
+      setNeedsVerified(false);
+    } else {
+      setNeedsVerified(true);
+    }
+  };
+
+  const handleSentVerifyEmail = async () => {
+    if (user) {
+      sendNewEmailVerification(user);
+    }
+    setShowVerifyModal(true);
+    await user?.reload();
+  };
+
+  const handleCloseModal = async () => {
+    setShowVerifyModal(false);
+  };
 
   useEffect(() => {
-    if (profile) {
-      setForm({
-        username: profile?.name ?? "",
-        phone: profile?.phoneNumber ?? "",
-        age: profile?.age ?? "",
-      });
+    if (user) {
+      checkEmailVerificationStatus();
     }
-  }, [profile]);
+  }, [user]);
 
   if (!profile) {
     return <Text>Loading profile...</Text>;
@@ -46,6 +68,9 @@ export default function Profile() {
           <Text className="font-bold text-xl text-neutral-800">
             Personal Info
           </Text>
+          <Pressable onPress={() => setIsEditing(true)}>
+            <Text>Edit</Text>
+          </Pressable>
 
           <View className="border-b border-neutral-300 my-2" />
 
@@ -57,7 +82,26 @@ export default function Profile() {
 
           <Text className="p-3">Age: {profile.age ?? "-"}</Text>
 
-          <Text className="p-3 text-violet-800">Change Password</Text>
+          <Pressable onPress={() => setChangePassword(true)}>
+            <Text className="p-3 text-violet-800">Change Password</Text>
+          </Pressable>
+
+          {needsVerified && (
+            <View className="bg-red-100 my-4">
+              <Text className="p-3 font-semibold text-red-600">
+                Warning: Your Email is not verified. You will not be able to
+                change your password until email verification is complete!
+              </Text>
+              <Pressable
+                onPress={handleSentVerifyEmail}
+                className="bg-red-700 w-4/12 max-w-[300px] py-2 m-3 rounded-lg"
+              >
+                <Text className="text-center text-white text-sm">
+                  Verify Email
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </View>
 
         {/* Settings */}
@@ -84,6 +128,22 @@ export default function Profile() {
           <Text className="p-3">Set Highlight color:</Text>
         </View>
       </View>
+      <ChangePasswordModal
+        visible={chagePassword}
+        onClose={() => setChangePassword(false)}
+        onSubmit={handleForgotPassword}
+        showEmailInput={false}
+      />
+      <EmailVerificationModal
+        visible={showVerifyModal}
+        onClose={handleCloseModal}
+        onResend={sendNewEmailVerification}
+        user={user}
+      />
+      <EditProfileModal
+        visible={isEditing}
+        onClose={() => setIsEditing(false)}
+      />
     </View>
   );
 }

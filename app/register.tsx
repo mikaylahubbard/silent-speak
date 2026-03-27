@@ -1,3 +1,4 @@
+import EmailVerificationModal from "@/components/forms/email-verification";
 import { useSession } from "@/context";
 import { Link, router } from "expo-router";
 import { useState } from "react";
@@ -16,7 +17,11 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const { signUp, error, clearError, signOut } = useSession();
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [newUser, setNewUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signUp, error, clearError, signOut, sendNewEmailVerification } =
+    useSession();
 
   // ============================================================================
   // Handlers
@@ -30,13 +35,29 @@ const Register = () => {
     return await signUp(email, password, name);
   };
 
+  const handleCloseModal = async () => {
+    setShowVerifyModal(false);
+    router.replace("/login");
+  };
+
   /**
    * Handles the sign-up button press
    */
   const handleSignUpPress = async () => {
-    await handleRegister();
-    router.replace("/");
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const resp = await handleRegister();
+    setIsLoading(false);
+
+    if (resp) {
+      setNewUser(resp);
+      await sendNewEmailVerification(resp);
+      await setShowVerifyModal(true);
+      await signOut();
+    }
   };
+
   // ============================================================================
   // Render
   // ============================================================================
@@ -108,9 +129,10 @@ const Register = () => {
       <Pressable
         onPress={handleSignUpPress}
         className="bg-neutral-700 w-4/12 max-w-[300px] py-3 rounded-lg"
+        disabled={isLoading}
       >
         <Text className="text-white text-base font-semibold text-center">
-          Register
+          {isLoading ? "Registering..." : "Register"}
         </Text>
       </Pressable>
 
@@ -118,10 +140,17 @@ const Register = () => {
 
       <Text className="text-gray-600 pt-5 pb-2">Already have an account?</Text>
       <Link href="/login" asChild className="ml-2">
-        <Pressable>
+        <Pressable onPress={clearError}>
           <Text className="text-blue-600 font-semibold">Log in</Text>
         </Pressable>
       </Link>
+
+      <EmailVerificationModal
+        visible={showVerifyModal}
+        onClose={handleCloseModal}
+        onResend={sendNewEmailVerification}
+        user={newUser}
+      />
     </View>
   );
 };

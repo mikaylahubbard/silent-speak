@@ -10,7 +10,12 @@
 
 import { auth, db } from "@/lib/firebase-config";
 import { login, logout, register } from "@/lib/firebase-service";
-import { User, onAuthStateChanged } from "firebase/auth";
+import {
+  User,
+  onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -69,10 +74,13 @@ interface AuthContextType {
   addCard: (title: string, message: string) => void;
   deleteCard: (id: string) => void;
   editCard: (title: string, description: string, id: string) => void;
+  editProfile: (username: string, phoneNumber: string, age: string) => void;
+  handleForgotPassword: () => void;
   /** Loading state for authentication operations */
   isLoading: boolean;
   error: string | null;
   clearError: () => void;
+  sendNewEmailVerification: (user: User) => void;
 }
 
 // ============================================================================
@@ -132,6 +140,8 @@ export function SessionProvider(props: { children: React.ReactNode }) {
       );
 
       const cardsRef = collection(userRef, "cards");
+
+      const cardsSnapshot = await getDoc(doc(db, "users", firebaseUser.uid));
 
       for (const card of defaultCards()) {
         await addDoc(cardsRef, {
@@ -241,6 +251,7 @@ export function SessionProvider(props: { children: React.ReactNode }) {
   const handleSignIn = async (email: string, password: string) => {
     try {
       const response = await login(email, password);
+      await response?.user.reload();
       return response?.user;
     } catch (error: any) {
       console.error("[handleSignIn error] ==>", error);
@@ -278,7 +289,6 @@ export function SessionProvider(props: { children: React.ReactNode }) {
       //   // Pass 'name' explicitly to ensure the DB record gets it
       //   await ensureUserDocument(response.user, name);
       // }
-
       return response?.user;
     } catch (error: any) {
       switch (error.code) {
@@ -357,6 +367,62 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     }
   };
 
+  const editProfile = async (
+    username: string,
+    phoneNumber: string,
+    age: string,
+  ) => {
+    console.log("editing profile");
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const userRef = doc(db, "users", user.uid);
+    console.log(userRef);
+    await updateDoc(userRef, {
+      "profile.name": username,
+      "profile.phoneNumber": phoneNumber,
+      "profile.age": age,
+    });
+    setUserDoc((prev: { profile: any }) => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        name: username,
+        phoneNumber: phoneNumber,
+        age: age,
+      },
+    }));
+  };
+
+  const handleForgotPassword = async (email?: string) => {
+    let emailToUse: string = "";
+    // user is not logged in
+    if (!user) {
+      if (email) {
+        emailToUse = email.trim().toLowerCase();
+      }
+    } else {
+      // user is logged in
+      if (user.email) {
+        emailToUse = user.email;
+      }
+    }
+    if (emailToUse !== "") {
+      try {
+        await sendPasswordResetEmail(auth, emailToUse);
+        console.log("Trying email:", emailToUse);
+      } catch (e) {
+        console.error("Error sending password reset: ", e);
+      }
+    } else {
+      console.error("Error getting email.");
+    }
+  };
+
+  const sendNewEmailVerification = async (user: User) => {
+    await sendEmailVerification(user);
+  };
+
   // ============================================================================
   // Render
   // ============================================================================
@@ -373,12 +439,19 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         addCard,
         deleteCard,
         editCard,
+        editProfile,
+        handleForgotPassword,
         isLoading,
         error,
         clearError,
+        sendNewEmailVerification,
       }}
     >
       {props.children}
     </AuthContext.Provider>
   );
 }
+
+// function sendPasswordResetEmail(auth: Auth, email: string) {
+//   throw new Error("Function not implemented.");
+// }
