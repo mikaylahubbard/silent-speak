@@ -3,6 +3,7 @@ import EditProfileModal from "@/components/forms/edit-profile";
 import EmailVerificationModal from "@/components/forms/email-verification";
 import ChangePasswordModal from "@/components/forms/password-reset";
 import { useSession } from "@/context";
+import MaterialIcons from "@expo/vector-icons/build/MaterialIcons";
 import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 
@@ -23,6 +24,8 @@ export default function Profile() {
   const [chagePassword, setChangePassword] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [needsVerified, setNeedsVerified] = useState(user?.emailVerified);
+  const size = 28;
+  const color = palette[700];
 
   const checkEmailVerificationStatus = async () => {
     if (!user) return;
@@ -73,12 +76,14 @@ export default function Profile() {
       <ScrollView contentContainerStyle={{ padding: 20 }}>
         {/* Personal Info */}
         <View>
-          <Text className="font-bold text-xl text-neutral-800">
-            Personal Info
-          </Text>
-          <Pressable onPress={() => setIsEditing(true)}>
-            <Text>Edit</Text>
-          </Pressable>
+          <View className="flex-row items-center justify-between">
+            <Text className="font-bold text-xl text-neutral-800">
+              Personal Info
+            </Text>
+            <Pressable onPress={() => setIsEditing(true)}>
+              <MaterialIcons name="create" size={size} color={color} />
+            </Pressable>
+          </View>
 
           <View className="border-b border-neutral-300 my-2" />
 
@@ -91,7 +96,7 @@ export default function Profile() {
           <Text className="p-3">Age: {profile.age ?? "-"}</Text>
 
           <Pressable onPress={() => setChangePassword(true)}>
-            <Text className="p-3" style={{ color: palette[800] }}>
+            <Text className="p-3" style={{ color: color }}>
               Change Password
             </Text>
           </Pressable>

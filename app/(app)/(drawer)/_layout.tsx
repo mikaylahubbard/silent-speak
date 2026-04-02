@@ -45,7 +45,7 @@ export default function DrawerLayout() {
           },
           drawerActiveTintColor: "#f5f5f5",
           drawerActiveBackgroundColor: "#525252",
-          headerTintColor: "#262626",
+          headerTintColor: "#525252",
           drawerHideStatusBarOnOpen: true,
         }}
       >
@@ -77,6 +77,7 @@ export default function DrawerLayout() {
           options={{
             drawerLabel: "Profile",
             title: "My Profile",
+            headerTitle: () => null,
             drawerIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="account"
@@ -91,10 +92,7 @@ export default function DrawerLayout() {
                 }}
                 className="pe-4"
               >
-                <Text
-                  className="text-violet-950 font-semibold"
-                  style={{ color: palette[900] }}
-                >
+                <Text className="font-semibold" style={{ color: palette[700] }}>
                   Log out
                 </Text>
               </Pressable>
