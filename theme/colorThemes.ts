@@ -108,3 +108,42 @@ export const PALETTES = {
     900: "#831843",
   },
 };
+
+export const MODES = {
+  light: {
+    //dark grey
+    primaryText: "#404040",
+    //white
+    primaryBg: "#FFFFFF",
+    //white
+    secondaryText: "#FFFFFF",
+    //medium grey
+    tertiaryText: "#737373",
+    // dark grey
+    secondaryBg: "#404040",
+    // light grey
+    cardBg: "#e5e5e5",
+    // slightly darker light grey - for nav header
+    headerBg: "#d4d4d4",
+    //light grey - for backgrounds and lines
+    accents: "#d4d4d4",
+  },
+  dark: {
+    // light grey (neutral-200) – main readable text on dark backgrounds
+    primaryText: "#e5e5e5",
+    // very dark grey (neutral-900) – main app background
+    primaryBg: "#171717",
+    // very dark grey (neutral-900) – text on light elements (inverse of light mode)
+    secondaryText: "#171717",
+    // medium-light grey (neutral-400) – less prominent text
+    tertiaryText: "#a3a3a3",
+    // dark grey (neutral-700) – secondary surfaces / containers
+    secondaryBg: "#404040",
+    // slightly lighter dark grey (neutral-800) – cards (separate from main bg)
+    cardBg: "#262626",
+    // slightly lighter than card (neutral-700) – headers/nav bars
+    headerBg: "#404040",
+    // medium dark grey (neutral-700) – borders, dividers, subtle accents
+    accents: "#404040",
+  },
+};
