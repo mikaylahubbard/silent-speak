@@ -20,7 +20,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
 }
 
 export default function DrawerLayout() {
-  const { signOut, user } = useSession();
+  const { signOut, user, palette } = useSession();
   const LogoTitle = () => (
     <Image
       className="w-36 h-auto"
@@ -65,7 +65,9 @@ export default function DrawerLayout() {
                 }}
                 className="pe-4"
               >
-                <Text className="text-violet-950 font-semibold">Log out</Text>
+                <Text className="font-semibold" style={{ color: palette[900] }}>
+                  Log out
+                </Text>
               </Pressable>
             ),
           }}
@@ -89,7 +91,12 @@ export default function DrawerLayout() {
                 }}
                 className="pe-4"
               >
-                <Text className="text-violet-950 font-semibold">Log out</Text>
+                <Text
+                  className="text-violet-950 font-semibold"
+                  style={{ color: palette[900] }}
+                >
+                  Log out
+                </Text>
               </Pressable>
             ),
           }}

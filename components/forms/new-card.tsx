@@ -1,3 +1,4 @@
+import { useSession } from "@/context";
 import React, { useState } from "react";
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
 
@@ -10,6 +11,8 @@ type Props = {
 const NewCardModal = ({ visible, onClose, onSubmit }: Props) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const { palette } = useSession();
+  const color = palette[600];
 
   const handleAdd = () => {
     // submit title and message
@@ -50,7 +53,8 @@ const NewCardModal = ({ visible, onClose, onSubmit }: Props) => {
             </Pressable>
 
             <Pressable
-              className="bg-violet-500 px-4 py-2 rounded-md"
+              className="px-4 py-2 rounded-md"
+              style={{ backgroundColor: color }}
               onPress={handleAdd}
             >
               <Text className="text-white">Add</Text>

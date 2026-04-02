@@ -1,3 +1,4 @@
+import { useSession } from "@/context";
 import React, { useState } from "react";
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
 
@@ -16,6 +17,9 @@ const ChangePasswordModal = ({
 }: Props) => {
   const [email, setEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { palette } = useSession();
+  const color = palette[600];
+
   const handleAdd = () => {
     if (email !== "") {
       onSubmit(email);
@@ -69,7 +73,8 @@ const ChangePasswordModal = ({
             </Pressable>
 
             <Pressable
-              className="bg-violet-500 px-4 py-2 rounded-md"
+              className="px-4 py-2 rounded-md"
+              style={{ backgroundColor: color }}
               onPress={handleAdd}
             >
               <Text className="text-white">Send Email</Text>

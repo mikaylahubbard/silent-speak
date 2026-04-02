@@ -1,3 +1,4 @@
+import { useSession } from "@/context";
 import React, { useEffect, useState } from "react";
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
 
@@ -20,6 +21,8 @@ const EditCardModal = ({
 }: Props) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const { palette } = useSession();
+  const color = palette[600];
 
   useEffect(() => {
     setTitle(currentTitle);
@@ -65,7 +68,8 @@ const EditCardModal = ({
             </Pressable>
 
             <Pressable
-              className="bg-violet-500 px-4 py-2 rounded-md"
+              className="px-4 py-2 rounded-md"
+              style={{ backgroundColor: color }}
               onPress={handleAdd}
             >
               <Text className="text-white">Add</Text>

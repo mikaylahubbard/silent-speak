@@ -1,3 +1,4 @@
+import { useSession } from "@/context";
 import { User } from "@firebase/auth";
 import React from "react";
 import { Modal, Pressable, Text, View } from "react-native";
@@ -15,6 +16,9 @@ const EmailVerificationModal = ({
   onResend,
   user,
 }: Props) => {
+  const { palette } = useSession();
+  const color = palette[600];
+
   const handleResend = () => {
     if (user) {
       onResend(user);
@@ -54,7 +58,8 @@ const EmailVerificationModal = ({
             </Pressable>
 
             <Pressable
-              className="bg-violet-500 px-4 py-2 rounded-md"
+              className="px-4 py-2 rounded-md"
+              style={{ backgroundColor: color }}
               onPress={handleResend}
             >
               <Text className="text-white">Resend</Text>

@@ -91,7 +91,9 @@ export default function Profile() {
           <Text className="p-3">Age: {profile.age ?? "-"}</Text>
 
           <Pressable onPress={() => setChangePassword(true)}>
-            <Text className="p-3 text-violet-800">Change Password</Text>
+            <Text className="p-3" style={{ color: palette[800] }}>
+              Change Password
+            </Text>
           </Pressable>
 
           {needsVerified && (

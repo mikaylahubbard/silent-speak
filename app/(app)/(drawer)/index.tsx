@@ -11,12 +11,12 @@ import SearchBar from "../../../components/search-bar";
 const HomeScreen = () => {
   const [blurred, setBlurred] = useState(false);
   //get the user document/data
-  const { userDoc, cards, addCard } = useSession();
+  const { userDoc, cards, addCard, palette } = useSession();
   const [editingMode, setEditingMode] = useState(false);
   const [newCardMode, setNewCardMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const size = 42;
-  const color = "#59168B";
+  const color = palette[700];
 
   const filteredAndSortedCards = React.useMemo(() => {
     return [...(cards || [])]

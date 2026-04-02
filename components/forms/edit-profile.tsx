@@ -13,6 +13,8 @@ const EditProfileModal = ({ visible, onClose }: Props) => {
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [age, setAge] = useState("");
+  const { palette } = useSession();
+  const color = palette[600];
 
   useEffect(() => {
     if (profile) {
@@ -67,7 +69,8 @@ const EditProfileModal = ({ visible, onClose }: Props) => {
             </Pressable>
 
             <Pressable
-              className="bg-violet-500 px-4 py-2 rounded-md"
+              className="px-4 py-2 rounded-md"
+              style={{ backgroundColor: color }}
               onPress={() => {
                 console.log("Pressed update");
                 handleUpdate();
