@@ -10,6 +10,7 @@
 
 import { auth, db } from "@/lib/firebase-config";
 import { login, logout, register } from "@/lib/firebase-service";
+import { PALETTES } from "@/theme/colorThemes";
 import {
   User,
   onAuthStateChanged,
@@ -81,6 +82,9 @@ interface AuthContextType {
   error: string | null;
   clearError: () => void;
   sendNewEmailVerification: (user: User) => void;
+  palette: typeof PALETTES.violet;
+  themeName: string;
+  setTheme: (theme: string) => Promise<void>;
 }
 
 // ============================================================================
@@ -423,6 +427,30 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     await sendEmailVerification(user);
   };
 
+  // Theme colors
+  const themeName: keyof typeof PALETTES =
+    userDoc?.settings?.colorTheme ?? "violet";
+  const palette = PALETTES[themeName] ?? PALETTES["violet"];
+
+  const setTheme = async (newTheme: string) => {
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const userRef = doc(db, "users", user.uid);
+    console.log(userRef);
+    await updateDoc(userRef, {
+      "settings.colorTheme": newTheme,
+    });
+
+    setUserDoc((prev: { settings: any }) => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        colorTheme: newTheme,
+      },
+    }));
+  };
+
   // ============================================================================
   // Render
   // ============================================================================
@@ -445,6 +473,9 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         error,
         clearError,
         sendNewEmailVerification,
+        palette,
+        themeName,
+        setTheme,
       }}
     >
       {props.children}

@@ -1,13 +1,21 @@
+import ColorGrid from "@/components/colorGrid";
 import EditProfileModal from "@/components/forms/edit-profile";
 import EmailVerificationModal from "@/components/forms/email-verification";
 import ChangePasswordModal from "@/components/forms/password-reset";
 import { useSession } from "@/context";
 import React, { useEffect, useState } from "react";
-import { Pressable, Switch, Text, View } from "react-native";
+import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 
 export default function Profile() {
-  const { userDoc, handleForgotPassword, user, sendNewEmailVerification } =
-    useSession();
+  const {
+    userDoc,
+    handleForgotPassword,
+    user,
+    sendNewEmailVerification,
+    palette,
+    themeName,
+    setTheme,
+  } = useSession();
   const profile = userDoc?.profile;
 
   const [isEnabled, setIsEnabled] = useState(false);
@@ -62,7 +70,7 @@ export default function Profile() {
         </Text>
       </View>
 
-      <View className="p-10">
+      <ScrollView contentContainerStyle={{ padding: 20 }}>
         {/* Personal Info */}
         <View>
           <Text className="font-bold text-xl text-neutral-800">
@@ -116,7 +124,7 @@ export default function Profile() {
             <Text className="p-3">Dark Mode</Text>
 
             <Switch
-              trackColor={{ false: "#404040", true: "#5b21b6" }}
+              trackColor={{ false: "#404040", true: palette[800] }}
               thumbColor="#f5f5f5"
               ios_backgroundColor="#404040"
               onValueChange={setIsEnabled}
@@ -125,9 +133,15 @@ export default function Profile() {
             />
           </View>
 
-          <Text className="p-3">Set Highlight color:</Text>
+          <Text className="p-3">Select Highlight color:</Text>
+
+          <ColorGrid onSelect={setTheme} selected={themeName} />
+
+          {/* <Pressable onPress={() => setTheme("green")}>
+            <Text>Switch to greeeeeen</Text>
+          </Pressable> */}
         </View>
-      </View>
+      </ScrollView>
       <ChangePasswordModal
         visible={chagePassword}
         onClose={() => setChangePassword(false)}
