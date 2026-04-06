@@ -46,9 +46,12 @@ Cards are designed to clearly communicate feelings, needs, and intentions withou
 
 ## Tech Stack
 
-- **Framework:** React Native (Expo)
-- **Styling:** NativeWind (Tailwind CSS for React Native)
-- **Backend:** Firebase (Authentication + Database)
+- React Native (Expo)
+- NativeWind (Tailwind CSS)
+- Firebase Authentication
+- Firestore Database
+- Expo Router (file-based navigation)
+- Context API (state management)
 
 ## Future Features
 
