@@ -17,7 +17,7 @@ const ChangePasswordModal = ({
 }: Props) => {
   const [email, setEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const { palette } = useSession();
+  const { palette, modePalette } = useSession();
   const color = palette[600];
 
   const handleAdd = () => {
@@ -40,11 +40,24 @@ const ChangePasswordModal = ({
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View className="flex-1 justify-center items-center bg-black/40">
-        <View className="w-11/12 bg-white rounded-xl p-6">
-          <Text className="text-xl font-semibold mb-4">Change Password</Text>
+        <View
+          className="w-11/12 bg-white rounded-xl p-6"
+          style={{ backgroundColor: modePalette.primaryBg }}
+        >
+          <Text
+            className="text-xl font-semibold mb-4"
+            style={{ color: modePalette.primaryText }}
+          >
+            Change Password
+          </Text>
 
           {showEmailInput && (
             <TextInput
+              style={{
+                borderColor: modePalette.accents,
+                color: modePalette.primaryText,
+              }}
+              placeholderTextColor={modePalette.tertiaryText}
               className="border border-gray-300 rounded-md p-3 mb-3"
               placeholder="Enter Email"
               value={email}
@@ -52,11 +65,17 @@ const ChangePasswordModal = ({
             />
           )}
 
-          <Text className="text-base font-light mb-4">
+          <Text
+            className="text-base font-light mb-4"
+            style={{ color: modePalette.primaryText }}
+          >
             We will send a message to your email that will allow you to change
             your password
           </Text>
-          <Text className="text-xs font-extralight mb-4">
+          <Text
+            className="text-xs font-extralight mb-4"
+            style={{ color: modePalette.primaryText }}
+          >
             Note: This email will most likely end up in spam
           </Text>
           {successMessage !== "" && (
@@ -67,9 +86,10 @@ const ChangePasswordModal = ({
           <View className="flex-row justify-end gap-3">
             <Pressable
               className="bg-neutral-200 px-4 py-2 rounded-md"
+              style={{ backgroundColor: modePalette.tertiaryBg }}
               onPress={handleClose}
             >
-              <Text>Cancel</Text>
+              <Text style={{ color: modePalette.tertiaryText }}>Cancel</Text>
             </Pressable>
 
             <Pressable

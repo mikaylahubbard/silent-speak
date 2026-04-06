@@ -29,11 +29,15 @@ const CardItem = ({
   isEditing,
   color,
 }: CardItemProps) => {
-  const { deleteCard } = useSession();
+  const { deleteCard, modePalette } = useSession();
   return (
     <TouchableOpacity
       onPress={expand}
       className="border border-neutral-200 rounded-xl my-1 py-6 px-5 bg-neutral-200"
+      style={{
+        backgroundColor: modePalette.cardBg,
+        borderColor: modePalette.cardBg,
+      }}
       activeOpacity={0.8}
     >
       <View className="flex flex-row items-center justify-between">
@@ -54,8 +58,18 @@ const CardItem = ({
           </Animated.View>
         )}
         <View className="flex-1 pr-2">
-          <Text className="text-xl font-semibold mb-1">{title}</Text>
-          <Text className="text-sm text-neutral-700">{description}</Text>
+          <Text
+            className="text-xl font-semibold mb-1"
+            style={{ color: modePalette.primaryText }}
+          >
+            {title}
+          </Text>
+          <Text
+            className="text-sm text-neutral-700"
+            style={{ color: modePalette.primaryText }}
+          >
+            {description}
+          </Text>
         </View>
         {isEditing && (
           <Animated.View entering={FadeInRight} exiting={FadeOutRight}>

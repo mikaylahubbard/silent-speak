@@ -10,7 +10,7 @@
 
 import { auth, db } from "@/lib/firebase-config";
 import { login, logout, register } from "@/lib/firebase-service";
-import { PALETTES } from "@/theme/colorThemes";
+import { MODES, PALETTES } from "@/theme/colorThemes";
 import {
   User,
   onAuthStateChanged,
@@ -85,6 +85,9 @@ interface AuthContextType {
   palette: typeof PALETTES.violet;
   themeName: string;
   setTheme: (theme: string) => Promise<void>;
+  modePalette: typeof MODES.light;
+  mode: "light" | "dark";
+  switchMode: () => Promise<void>;
 }
 
 // ============================================================================
@@ -437,7 +440,6 @@ export function SessionProvider(props: { children: React.ReactNode }) {
       throw new Error("User not authenticated");
     }
     const userRef = doc(db, "users", user.uid);
-    console.log(userRef);
     await updateDoc(userRef, {
       "settings.colorTheme": newTheme,
     });
@@ -449,6 +451,29 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         colorTheme: newTheme,
       },
     }));
+  };
+
+  const mode: "light" | "dark" = userDoc?.settings?.theme ?? "light";
+  const modePalette = MODES[mode];
+
+  const switchMode = async () => {
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const newMode = mode === "light" ? "dark" : "light";
+    const userRef = doc(db, "users", user.uid);
+
+    setUserDoc((prev: { settings: any }) => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        theme: newMode,
+      },
+    }));
+
+    await updateDoc(userRef, {
+      "settings.theme": newMode,
+    });
   };
 
   // ============================================================================
@@ -476,6 +501,9 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         palette,
         themeName,
         setTheme,
+        modePalette,
+        mode,
+        switchMode,
       }}
     >
       {props.children}

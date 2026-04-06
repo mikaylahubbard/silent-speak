@@ -20,13 +20,14 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
 }
 
 export default function DrawerLayout() {
-  const { signOut, user, palette } = useSession();
+  const { signOut, user, palette, modePalette, mode } = useSession();
+  const images = {
+    light: require("../../../assets/images/silent_speak_long_logo.png"),
+    dark: require("../../../assets/images/Silent_Speak_Long_Logo_Dark.png"),
+    // add more variants as needed
+  };
   const LogoTitle = () => (
-    <Image
-      className="w-36 h-auto"
-      source={require("../../../assets/images/silent_speak_long_logo.png")}
-      resizeMode="contain"
-    />
+    <Image className="w-36 h-auto" source={images[mode]} resizeMode="contain" />
   );
   const handleLogout = async () => {
     await signOut();
@@ -38,14 +39,20 @@ export default function DrawerLayout() {
         drawerContent={CustomDrawerContent}
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#d4d4d4",
+            // backgroundColor: "#d4d4d4",
+            backgroundColor: modePalette.headerBg,
           },
           drawerStyle: {
-            backgroundColor: "#f5f5f5",
+            // backgroundColor: "#f5f5f5",
+            backgroundColor: modePalette.tertiaryBg,
           },
-          drawerActiveTintColor: "#f5f5f5",
-          drawerActiveBackgroundColor: "#525252",
-          headerTintColor: "#525252",
+          // drawerActiveTintColor: "#f5f5f5",
+          // drawerActiveBackgroundColor: "#525252",
+          // headerTintColor: "#525252",
+          drawerActiveTintColor: modePalette.activeText,
+          drawerActiveBackgroundColor: modePalette.activeBg,
+          drawerInactiveTintColor: modePalette.tertiaryText,
+          headerTintColor: modePalette.headerTint,
           drawerHideStatusBarOnOpen: true,
         }}
       >

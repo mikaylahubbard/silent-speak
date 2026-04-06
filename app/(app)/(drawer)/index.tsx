@@ -11,7 +11,7 @@ import SearchBar from "../../../components/search-bar";
 const HomeScreen = () => {
   const [blurred, setBlurred] = useState(false);
   //get the user document/data
-  const { userDoc, cards, addCard, palette } = useSession();
+  const { userDoc, cards, addCard, palette, modePalette } = useSession();
   const [editingMode, setEditingMode] = useState(false);
   const [newCardMode, setNewCardMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +30,10 @@ const HomeScreen = () => {
   }, [cards, searchQuery]);
 
   return (
-    <View className="flex-1 px-4 pt-2 bg-white">
+    <View
+      className="flex-1 px-4 pt-2 bg-white"
+      style={{ backgroundColor: modePalette.primaryBg }}
+    >
       {/* NEEDS IMPLEMENTED */}
       <SearchBar query={searchQuery} onSearch={setSearchQuery} />
 
@@ -58,6 +61,7 @@ const HomeScreen = () => {
           {/* add a card */}
           <Pressable
             className="bg-white p-2 rounded-full shadow-slate-100"
+            style={{ backgroundColor: modePalette.tertiaryBg }}
             onPress={() => setNewCardMode(true)}
           >
             <MaterialIcons name="add" size={size} color={color} />
@@ -66,6 +70,7 @@ const HomeScreen = () => {
           {/* enter edit mode: this should allow you to delete or edit individual cards */}
           <Pressable
             className="bg-white p-2 rounded-full shadow-slate-100"
+            style={{ backgroundColor: modePalette.tertiaryBg }}
             onPress={() => setEditingMode(true)}
           >
             <MaterialIcons name="create" size={size} color={color} />

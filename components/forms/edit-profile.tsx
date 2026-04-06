@@ -8,7 +8,7 @@ type Props = {
 };
 
 const EditProfileModal = ({ visible, onClose }: Props) => {
-  const { userDoc, editProfile } = useSession();
+  const { userDoc, editProfile, modePalette } = useSession();
   const profile = userDoc?.profile;
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -33,27 +33,62 @@ const EditProfileModal = ({ visible, onClose }: Props) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View className="flex-1 justify-center items-center bg-black/40">
-        <View className="w-11/12 bg-white rounded-xl p-6">
-          <Text className="text-xl font-semibold mb-4">Edit Profile Info</Text>
+        <View
+          className="w-11/12 bg-white rounded-xl p-6"
+          style={{ backgroundColor: modePalette.primaryBg }}
+        >
+          <Text
+            className="text-xl font-semibold mb-4"
+            style={{ color: modePalette.primaryText }}
+          >
+            Edit Profile Info
+          </Text>
 
-          <Text className=" text-neutral-500 p-1">Username:</Text>
+          <Text
+            className=" text-neutral-500 p-1"
+            style={{ color: modePalette.tertiaryText }}
+          >
+            Username:
+          </Text>
           <TextInput
             className="border border-gray-300 rounded-md p-3 mb-3"
             // placeholder="Card title"
+            style={{
+              borderColor: modePalette.accents,
+              color: modePalette.primaryText,
+            }}
             value={username}
             onChangeText={setUsername}
           />
 
-          <Text className=" text-neutral-500 p-1">Phone Number:</Text>
+          <Text
+            className=" text-neutral-500 p-1"
+            style={{ color: modePalette.tertiaryText }}
+          >
+            Phone Number:
+          </Text>
           <TextInput
             className="border border-gray-300 rounded-md p-3 mb-4"
+            style={{
+              borderColor: modePalette.accents,
+              color: modePalette.primaryText,
+            }}
             multiline
             value={phoneNumber}
             onChangeText={setPhoneNumber}
           />
 
-          <Text className=" text-neutral-500 p-1">Age:</Text>
+          <Text
+            className=" text-neutral-500 p-1"
+            style={{ color: modePalette.tertiaryText }}
+          >
+            Age:
+          </Text>
           <TextInput
+            style={{
+              borderColor: modePalette.accents,
+              color: modePalette.primaryText,
+            }}
             className="border border-gray-300 rounded-md p-3 mb-4"
             multiline
             value={age}
@@ -64,8 +99,9 @@ const EditProfileModal = ({ visible, onClose }: Props) => {
             <Pressable
               className="bg-neutral-200 px-4 py-2 rounded-md"
               onPress={onClose}
+              style={{ backgroundColor: modePalette.tertiaryBg }}
             >
-              <Text>Cancel</Text>
+              <Text style={{ color: modePalette.tertiaryText }}>Cancel</Text>
             </Pressable>
 
             <Pressable

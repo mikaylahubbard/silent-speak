@@ -111,39 +111,48 @@ export const PALETTES = {
 
 export const MODES = {
   light: {
-    //dark grey
-    primaryText: "#404040",
-    //white
-    primaryBg: "#FFFFFF",
-    //white
-    secondaryText: "#FFFFFF",
-    //medium grey
-    tertiaryText: "#737373",
-    // dark grey
-    secondaryBg: "#404040",
-    // light grey
-    cardBg: "#e5e5e5",
-    // slightly darker light grey - for nav header
-    headerBg: "#d4d4d4",
-    //light grey - for backgrounds and lines
-    accents: "#d4d4d4",
+    // TEXT
+    primaryText: "#404040", // neutral-700
+    secondaryText: "#FFFFFF", // white
+    tertiaryText: "#737373", // neutral-500
+
+    // BACKGROUNDS
+    primaryBg: "#FFFFFF", // neutral-0 (main background)
+    tertiaryBg: "#f5f5f5", // neutral-100 (screen sections)
+    cardBg: "#e5e5e5", // neutral-200 (cards)
+    headerBg: "#d4d4d4", // neutral-300 (headers)
+    secondaryBg: "#404040", // neutral-700 (dark containers)
+
+    // NAV
+    activeBg: "#525252", // neutral-600
+    activeText: "#f5f5f5", // neutral-100
+    headerTint: "#525252", // neutral-600
+
+    // DETAILS
+    accents: "#d4d4d4", // neutral-300 (borders/dividers)
+    imageTitle: "silent_speak_long_logo.png",
   },
+
   dark: {
-    // light grey (neutral-200) – main readable text on dark backgrounds
-    primaryText: "#e5e5e5",
-    // very dark grey (neutral-900) – main app background
-    primaryBg: "#171717",
-    // very dark grey (neutral-900) – text on light elements (inverse of light mode)
-    secondaryText: "#171717",
-    // medium-light grey (neutral-400) – less prominent text
-    tertiaryText: "#a3a3a3",
-    // dark grey (neutral-700) – secondary surfaces / containers
-    secondaryBg: "#404040",
-    // slightly lighter dark grey (neutral-800) – cards (separate from main bg)
-    cardBg: "#262626",
-    // slightly lighter than card (neutral-700) – headers/nav bars
-    headerBg: "#404040",
-    // medium dark grey (neutral-700) – borders, dividers, subtle accents
-    accents: "#404040",
+    // TEXT
+    primaryText: "#e5e5e5", // neutral-200
+    secondaryText: "#171717", // neutral-900 (only for contrast cases)
+    tertiaryText: "#a3a3a3", // neutral-400
+
+    // BACKGROUNDS
+    primaryBg: "#404040", // neutral-700 (lightest dark)
+    tertiaryBg: "#262626", // neutral-800
+    cardBg: "#1f1f1f", // neutral-900-ish (in-between)
+    headerBg: "#171717", // neutral-900 (darkest)
+    secondaryBg: "#525252", // neutral-600 (used sparingly)
+
+    // NAV
+    activeBg: "#525252", // neutral-600
+    activeText: "#f5f5f5", // neutral-100
+    headerTint: "#e5e5e5", // neutral-200
+
+    // DETAILS
+    accents: "#171717", // neutral-900
+    imageTitle: "Silent_Speak_Long_Logo_Dark.png",
   },
 };

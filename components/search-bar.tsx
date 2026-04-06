@@ -10,13 +10,16 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ query, onSearch }: SearchBarProps) => {
-  const { palette } = useSession();
+  const { palette, modePalette } = useSession();
   const size = 32;
   const color = palette[700];
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View className="p-2 flex flex-row bg-white rounded-lg w-full items-center drop-shadow-lg">
+    <View
+      className="p-2 flex flex-row bg-white rounded-lg w-full items-center drop-shadow-lg"
+      style={{ backgroundColor: modePalette.primaryBg }}
+    >
       <TextInput
         className="h-10 px-4 flex-1 border border-gray-300 rounded-md"
         placeholder="Search..."
@@ -25,7 +28,7 @@ const SearchBar = ({ query, onSearch }: SearchBarProps) => {
           onSearch(text);
         }}
         style={{
-          borderColor: isFocused ? palette[500] : "#d1d5db", // gray-300
+          borderColor: isFocused ? palette[500] : modePalette.accents,
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

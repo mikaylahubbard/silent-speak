@@ -21,7 +21,7 @@ const EditCardModal = ({
 }: Props) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
-  const { palette } = useSession();
+  const { palette, modePalette } = useSession();
   const color = palette[600];
 
   useEffect(() => {
@@ -41,12 +41,24 @@ const EditCardModal = ({
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View className="flex-1 justify-center items-center bg-black/40">
-        <View className="w-11/12 bg-white rounded-xl p-6">
-          <Text className="text-xl font-semibold mb-4">Edit Card</Text>
+        <View
+          className="w-11/12 bg-white rounded-xl p-6"
+          style={{ backgroundColor: modePalette.primaryBg }}
+        >
+          <Text
+            className="text-xl font-semibold mb-4"
+            style={{ color: modePalette.primaryText }}
+          >
+            Edit Card
+          </Text>
 
           <TextInput
             className="border border-gray-300 rounded-md p-3 mb-3"
             // placeholder="Card title"
+            style={{
+              borderColor: modePalette.accents,
+              color: modePalette.primaryText,
+            }}
             value={title}
             onChangeText={setTitle}
           />
@@ -54,6 +66,10 @@ const EditCardModal = ({
           <TextInput
             className="border border-gray-300 rounded-md p-3 mb-4"
             // placeholder="Card message"
+            style={{
+              borderColor: modePalette.accents,
+              color: modePalette.primaryText,
+            }}
             multiline
             value={message}
             onChangeText={setMessage}
@@ -62,9 +78,10 @@ const EditCardModal = ({
           <View className="flex-row justify-end gap-3">
             <Pressable
               className="bg-neutral-200 px-4 py-2 rounded-md"
+              style={{ backgroundColor: modePalette.tertiaryBg }}
               onPress={onClose}
             >
-              <Text>Cancel</Text>
+              <Text style={{ color: modePalette.tertiaryText }}>Cancel</Text>
             </Pressable>
 
             <Pressable
@@ -72,7 +89,7 @@ const EditCardModal = ({
               style={{ backgroundColor: color }}
               onPress={handleAdd}
             >
-              <Text className="text-white">Add</Text>
+              <Text className="text-white">Save</Text>
             </Pressable>
           </View>
         </View>

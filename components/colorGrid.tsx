@@ -1,3 +1,4 @@
+import { useSession } from "@/context";
 import React from "react";
 import { Pressable, View } from "react-native";
 
@@ -24,6 +25,7 @@ type Props = {
 };
 
 const ColorGrid = ({ selected, onSelect }: Props) => {
+  const { modePalette } = useSession();
   return (
     <View className="flex-row flex-wrap justify-center">
       {colorOptionsData.map((item) => {
@@ -37,7 +39,9 @@ const ColorGrid = ({ selected, onSelect }: Props) => {
           >
             <View
               className={`w-24 h-24 items-center justify-center rounded-xl ${
-                isSelected ? "border-4 border-neutral-400" : "bg-neutral-100"
+                isSelected
+                  ? "border-4 border-neutral-400"
+                  : modePalette.primaryBg
               }`}
             >
               <View className={`w-20 h-20 rounded-lg ${item.color}`} />

@@ -1,3 +1,4 @@
+import { useSession } from "@/context";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -15,6 +16,7 @@ interface ExpandedCardOverlayProps {
 
 const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const { modePalette } = useSession();
   const insets = useSafeAreaInsets();
 
   return (
@@ -23,7 +25,10 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
       pointerEvents="box-none"
     >
       <TouchableOpacity className="absolute inset-0" onPress={onClose} />
-      <View className="w-[85%] bg-white rounded-2xl p-5">
+      <View
+        className="w-[85%] bg-white rounded-2xl p-5"
+        style={{ backgroundColor: modePalette.tertiaryBg }}
+      >
         <View className="flex-row justify-between">
           <TouchableOpacity onPress={() => setIsFullScreen(true)}>
             <Feather name="maximize" size={24} color="black" />
@@ -32,10 +37,18 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
             <Feather name="x" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <Text className="text-3xl font-bold text-center pt-5">
+        <Text
+          className="text-3xl font-bold text-center pt-5"
+          style={{ color: modePalette.primaryText }}
+        >
           {card.title}
         </Text>
-        <Text className="text-base mt-2 pb-12">{card.description}</Text>
+        <Text
+          className="text-base mt-2 pb-12"
+          style={{ color: modePalette.primaryText }}
+        >
+          {card.description}
+        </Text>
       </View>
 
       {/* Fullscreen Modal */}
@@ -43,7 +56,10 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
         visible={isFullScreen}
         onRequestClose={() => setIsFullScreen(false)}
       >
-        <View className="flex-1 bg-white justify-center items-center w-full h-full p-3">
+        <View
+          className="flex-1 bg-white justify-center items-center w-full h-full p-3"
+          style={{ backgroundColor: modePalette.tertiaryBg }}
+        >
           <View
             className="absolute left-0 right-0 flex-row justify-between p-4"
             style={{ top: insets.top }}
@@ -55,15 +71,24 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
               <Feather name="x" size={24} color="black" />
             </TouchableOpacity>
           </View>
-          <Text className="text-5xl font-bold text-center p-3 mt-10">
+          <Text
+            className="text-5xl font-bold text-center p-3 mt-10"
+            style={{ color: modePalette.primaryText }}
+          >
             {card.title}
           </Text>
-          <Text className="text-xl p-3 mt-4">{card.description}</Text>
+          <Text
+            className="text-xl p-3 mt-4"
+            style={{ color: modePalette.primaryText }}
+          >
+            {card.description}
+          </Text>
           <TouchableOpacity
             onPress={onClose}
             className="mt-5 p-3 bg-gray-300 rounded-full"
+            style={{ backgroundColor: modePalette.secondaryBg }}
           >
-            <Text>Close</Text>
+            <Text style={{ color: modePalette.secondaryText }}>Close</Text>
           </TouchableOpacity>
         </View>
       </Modal>
