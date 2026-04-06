@@ -1,50 +1,62 @@
-# Welcome to your Expo app 👋
+# Silent Speak
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Silent Speak is a React Native (Expo) mobile application designed to support individuals who experience anxiety, autism, or nonverbal episodes. It provides a calm, accessible, and customizable way to communicate without relying on speech.
 
-## Get started
+The app empowers users to express themselves through personalized communication cards, helping them navigate stressful situations, overwhelming environments, or everyday interactions with confidence and clarity.
 
-1. Install dependencies
+Unlike many existing communication tools that feel overly complex or juvenile, Silent Speak prioritizes dignity, emotional clarity, and a mature, minimal user experience.
 
-   ```bash
-   npm install
-   ```
 
-2. Start the app
+## Core Features
 
-   ```bash
-   npx expo start
-   ```
+### Communication Cards
+- Create personalized communication cards
+- Create new cards within 2 clicks
+- Edit and delete cards as desired
+- Baseline stack of cards automatically created for each user
+- Cards designed for quick access during stressful moments
 
-In the output, you'll find options to open the app in a
+### Display Mode
+- Expand cards into a focused “display mode”
+- Optimized for readability 
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Authentication
+- Individual user accounts
+- Personalized data and card storage
+- Email verification & Password reset options
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Visual Preferences
+- Dark & light mode
+- Personalizable highlight color
 
-## Get a fresh project
+## Design Philosophy
 
-When you're ready, run:
+Silent Speak is built around three key principles:
 
-```bash
-npm run reset-project
-```
+### 1. Dignity
+The interface avoids childish visuals and instead focuses on a clean, modern design that respects users of all ages.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Emotional Clarity
+Cards are designed to clearly communicate feelings, needs, and intentions without confusion or overload.
 
-## Learn more
+### 3. Accessibility & Comfort
+- Simple navigation
+- Minimal cognitive load
+- Calm, supportive visual design (including theme support)
 
-To learn more about developing your project with Expo, look at the following resources:
+## Tech Stack
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **Framework:** React Native (Expo)
+- **Styling:** NativeWind (Tailwind CSS for React Native)
+- **Backend:** Firebase (Authentication + Database)
 
-## Join the community
+## Future Features
 
-Join our community of developers creating universal apps.
+- Emergency button to alert a trusted contact
+- Text-to-speech integration
+- Advanced customization (folders, favorites, size adjustment)
+- Sharing cards app-to-app
+- Interactive notes/typing section
+- emergency medical details or contact information
+- How to help section: to document things like grounding techniques, comfort foods, etc.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
