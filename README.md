@@ -1,6 +1,6 @@
 # Silent Speak
 
-Silent Speak is a React Native (Expo) mobile application designed to support individuals who experience anxiety, autism, or nonverbal episodes. It provides a calm, accessible, and customizable way to communicate without relying on speech.
+**Silent Speak** is a React Native (Expo) mobile application designed to support individuals who experience anxiety, autism, or nonverbal episodes. It provides a calm, accessible, and customizable way to communicate without relying on speech.
 
 The app empowers users to express themselves through personalized communication cards, helping them navigate stressful situations, overwhelming environments, or everyday interactions with confidence and clarity.
 
@@ -59,4 +59,52 @@ Cards are designed to clearly communicate feelings, needs, and intentions withou
 - Interactive notes/typing section
 - emergency medical details or contact information
 - How to help section: to document things like grounding techniques, comfort foods, etc.
+
+
+## Setup Instructions
+
+### Prerequisites
+
+-   Node.js
+-   Expo CLI (or use `npx expo`)
+
+### 1. Clone the Repository
+
+`` git clone https://github.com/mikaylahubbard/silent-speak.git ``   
+`` cd silent-speak 11 ``  
+`` npm install ``  
+
+### 2\. Create Environment Variables
+
+This project uses Firebase for authentication and data storage.
+
+You will need to create your own Firebase project and provide your API key.
+
+#### Steps:
+
+1.  Go to <https://console.firebase.google.com/>
+2.  Create a new project
+3.  Enable Authentication (Email/Password)
+4.  Create a Firestore database
+5.  Copy the **Firebase API Key**
+
+### 3\. Configure `.env`
+
+Create a `.env` file in the root of the project:
+
+``FIREBASE_API_KEY=your_firebase_api_key_here``   
+
+### 4\. Run the App
+
+npx expo start -c
+
+Then:
+
+-   Press `i` to open the iOS simulator
+-   Press `a` to open the Android emulator
+-   Or scan the QR code using the Expo Go app on your phone
+
+
+
+
 
