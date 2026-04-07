@@ -1,7 +1,7 @@
 import { useSession } from "@/context";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 interface Card {
   id: string | number;
@@ -31,10 +31,14 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
       >
         <View className="flex-row justify-between">
           <TouchableOpacity onPress={() => setIsFullScreen(true)}>
-            <Feather name="maximize" size={24} color="black" />
+            <Feather
+              name="maximize"
+              size={24}
+              color={modePalette.primaryText}
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={onClose}>
-            <Feather name="x" size={24} color="black" />
+            <Feather name="x" size={24} color={modePalette.primaryText} />
           </TouchableOpacity>
         </View>
         <Text
@@ -65,10 +69,14 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
             style={{ top: insets.top }}
           >
             <TouchableOpacity onPress={() => setIsFullScreen(false)}>
-              <Feather name="minimize" size={24} color="black" />
+              <Feather
+                name="minimize"
+                size={24}
+                color={modePalette.primaryText}
+              />
             </TouchableOpacity>
             <TouchableOpacity onPress={onClose}>
-              <Feather name="x" size={24} color="black" />
+              <Feather name="x" size={24} color={modePalette.primaryText} />
             </TouchableOpacity>
           </View>
           <Text
@@ -95,78 +103,5 @@ const ExpandedCardOverlay = ({ card, onClose }: ExpandedCardOverlayProps) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 1000,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  floatingCard: {
-    width: "85%",
-    backgroundColor: "white",
-    borderRadius: 14,
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    textAlign: "center",
-    paddingTop: 20,
-  },
-  description: {
-    fontSize: 16,
-    marginTop: 10,
-    paddingBottom: 50,
-  },
-  iconRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  iconRowFullscreen: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 15,
-  },
-  fullScreenContainer: {
-    flex: 1,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
-    padding: 10,
-  },
-  largeTitle: {
-    fontSize: 50,
-    fontWeight: "bold",
-    textAlign: "center",
-    padding: 10,
-    marginTop: 40,
-  },
-  largeDescription: {
-    fontSize: 20,
-    padding: 10,
-    marginTop: 15,
-  },
-  xButton: {
-    padding: 20,
-    alignSelf: "flex-end",
-    verticalAlign: "top",
-  },
-  closeButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "#ddd",
-    borderRadius: "20%",
-  },
-});
 
 export default ExpandedCardOverlay;
