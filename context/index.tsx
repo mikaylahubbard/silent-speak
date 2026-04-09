@@ -8,6 +8,10 @@
  * @module
  */
 
+// ============================================================================
+// Imports
+// ============================================================================
+
 import { auth, db } from "@/lib/firebase-config";
 import { login, logout, register } from "@/lib/firebase-service";
 import { MODES, PALETTES } from "@/theme/colorThemes";
@@ -23,12 +27,19 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { defaultCards, defaultUserDocument } from "../lib/user-templates";
 
 // ============================================================================
@@ -133,45 +144,73 @@ export function useSession(): AuthContextType {
  */
 
 export function SessionProvider(props: { children: React.ReactNode }) {
-  //find the user documents in the database
-  const ensureUserDocument = async (firebaseUser: User) => {
-    const userRef = doc(db, "users", firebaseUser.uid);
-    const snapshot = await getDoc(userRef);
-
-    console.log("name: :", firebaseUser.displayName ?? "user");
-
-    if (!snapshot.exists()) {
-      await setDoc(
-        userRef,
-        defaultUserDocument(firebaseUser, firebaseUser.displayName ?? "User"),
-      );
-
-      const cardsRef = collection(userRef, "cards");
-
-      const cardsSnapshot = await getDoc(doc(db, "users", firebaseUser.uid));
-
-      for (const card of defaultCards()) {
-        await addDoc(cardsRef, {
-          ...card,
-          createdAt: serverTimestamp(),
-        });
-      }
-    }
-  };
-
-  const [error, setError] = useState<string | null>(null);
-  const clearError = () => setError(null);
   // ============================================================================
   // State & Hooks
   // ============================================================================
+
+  const [error, setError] = useState<string | null>(null);
+  const clearError = () => setError(null);
 
   /**
    * Current authenticated user state
    * @type {[User | null, React.Dispatch<React.SetStateAction<User | null>>]}
    */
+  /**
+   * Loading state for authentication operations
+   * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
+   */
   const [user, setUser] = useState<User | null>(null);
   const [userDoc, setUserDoc] = useState<any | null>(null);
   const [cards, setCards] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const unsubscribeCardsRef = useRef<(() => void) | null>(null);
+  const activeUserRef = useRef<string | null>(null);
+
+  const isInitializingRef = useRef(false);
+  const sessionInitializedRef = useRef(false);
+
+  // ============================================================================
+  // Firestore Helpers (listeners)
+  // ============================================================================
+
+  //find the user documents in the database
+  const ensureUserDocument = async (firebaseUser: User, name?: string) => {
+    if (isInitializingRef.current) return; // prevent duplicate runs
+    isInitializingRef.current = true;
+
+    try {
+      const userRef = doc(db, "users", firebaseUser.uid);
+      const snapshot = await getDoc(userRef);
+
+      console.log("name: :", firebaseUser.displayName ?? "user");
+
+      if (!snapshot.exists()) {
+        await setDoc(
+          userRef,
+          defaultUserDocument(
+            firebaseUser,
+            name ?? firebaseUser.displayName ?? "User",
+          ),
+        );
+
+        const cardsRef = collection(userRef, "cards");
+
+        const cardsSnapshot = await getDocs(cardsRef);
+
+        if (!cardsSnapshot.empty) return;
+
+        for (const card of defaultCards()) {
+          await addDoc(cardsRef, {
+            ...card,
+            createdAt: serverTimestamp(),
+          });
+        }
+      }
+    } finally {
+      isInitializingRef.current = false;
+    }
+  };
 
   const setUserDocument = async (uid: string) => {
     try {
@@ -185,65 +224,104 @@ export function SessionProvider(props: { children: React.ReactNode }) {
       console.error("Error fetching user document:", error);
     }
   };
-  let unsubscribeCards: (() => void) | null = null;
-  const setUserCards = (uid: string) => {
-    const cardsRef = collection(db, "users", uid, "cards");
 
-    unsubscribeCards = onSnapshot(cardsRef, (snapshot) => {
-      const cardsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+  // ============================================================================
+  // Initialize Session - this is to make things a bit clearer
+  // ============================================================================
 
-      setCards(cardsData);
-    });
+  const initializeSession = async (firebaseUser: User) => {
+    await ensureUserDocument(firebaseUser);
+    await setUserDocument(firebaseUser.uid);
   };
-
-  /**
-   * Loading state for authentication operations
-   * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
-   */
-  const [isLoading, setIsLoading] = useState(true);
 
   // ============================================================================
   // Effects
   // ============================================================================
 
-  /**
-   * Sets up Firebase authentication state listener
-   * Automatically updates user state on auth changes
-   */
+  // ============================================================================
+  // Auth Effect
+  // ============================================================================
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        const uid = firebaseUser.uid;
+        activeUserRef.current = uid;
+
+        await firebaseUser.reload();
         setUser(firebaseUser);
 
-        await ensureUserDocument(firebaseUser);
-        await setUserDocument(firebaseUser.uid);
-        await setUserCards(firebaseUser.uid);
+        //checks
 
-        setIsLoading(false);
-      } else {
-        setUser(null);
-        setCards([]);
-
-        if (unsubscribeCards) {
-          unsubscribeCards();
-          unsubscribeCards = null;
+        if (activeUserRef.current !== uid) {
+          setIsLoading(false);
+          return;
         }
-        setIsLoading(false);
+        if (!sessionInitializedRef.current) {
+          await initializeSession(firebaseUser);
+        }
+        if (activeUserRef.current !== uid) {
+          setIsLoading(false);
+          return;
+        }
+        sessionInitializedRef.current = false;
+      } else {
+        activeUserRef.current = null;
+        setUser(null);
+        setUserDoc(null);
+        setCards([]);
       }
+      setIsLoading(false);
     });
 
-    // Cleanup subscription on unmount
-    return () => {
-      unsubscribe();
-
-      if (unsubscribeCards) {
-        unsubscribeCards();
-      }
-    };
+    return () => unsubscribe();
   }, []);
+
+  // ============================================================================
+  // Cards Listener Effect
+  // ============================================================================
+
+  useEffect(() => {
+    if (!user) {
+      if (unsubscribeCardsRef.current) {
+        unsubscribeCardsRef.current();
+        unsubscribeCardsRef.current = null;
+      }
+      return;
+    }
+
+    const cardsRef = collection(db, "users", user.uid, "cards");
+
+    if (unsubscribeCardsRef.current) {
+      unsubscribeCardsRef.current();
+    }
+
+    const currentUid = user.uid;
+
+    const unsubscribe = onSnapshot(
+      cardsRef,
+      (snapshot) => {
+        // check for stale updates
+        if (activeUserRef.current !== currentUid) return;
+        const cardsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCards(cardsData);
+      },
+      (error) => {
+        // Ignore logout-related errors: these are expected at times
+        if (error.code === "permission-denied") {
+          return;
+        }
+        console.error("Cards listener error:", error);
+      },
+    );
+
+    unsubscribeCardsRef.current = unsubscribe;
+
+    return () => unsubscribe();
+  }, [user]);
 
   // ============================================================================
   // Handlers
@@ -258,9 +336,14 @@ export function SessionProvider(props: { children: React.ReactNode }) {
   const handleSignIn = async (email: string, password: string) => {
     try {
       const response = await login(email, password);
-      await response?.user.reload();
+      if (response?.user) {
+        await response.user.getIdToken(true);
+        sessionInitializedRef.current = true;
+        await initializeSession(response.user);
+      }
       return response?.user;
     } catch (error: any) {
+      sessionInitializedRef.current = false;
       console.error("[handleSignIn error] ==>", error);
 
       switch (error.code) {
@@ -292,12 +375,19 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     try {
       setError(null);
       const response = await register(email, password, name);
-      // if (response?.user) {
-      //   // Pass 'name' explicitly to ensure the DB record gets it
-      //   await ensureUserDocument(response.user, name);
-      // }
+
+      if (response?.user) {
+        // force-refresh the token
+        await response.user.getIdToken(true);
+        sessionInitializedRef.current = true; // block the listener
+        await ensureUserDocument(response.user, name);
+        isInitializingRef.current = false; // ensure clean state before logout
+        await logout();
+      }
       return response?.user;
     } catch (error: any) {
+      sessionInitializedRef.current = false;
+      isInitializingRef.current = false;
       switch (error.code) {
         case "auth/email-already-in-use":
           setError("Email already in use. Please try again.");
@@ -318,6 +408,11 @@ export function SessionProvider(props: { children: React.ReactNode }) {
    */
   const handleSignOut = async () => {
     try {
+      // stop listener
+      unsubscribeCardsRef.current?.();
+      unsubscribeCardsRef.current = null;
+      isInitializingRef.current = false;
+
       await logout();
       setUser(null);
     } catch (error) {
