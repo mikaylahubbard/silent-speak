@@ -6,7 +6,7 @@ export default {
     slug: "silent-speak",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/silent_speak_icon.png",
+    icon: "./assets/images/silent_speak_favicon.png",
     scheme: "silentspeak",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
@@ -32,7 +32,9 @@ export default {
     },
     web: {
       output: "static",
-      favicon: "./assets/images/favicon.png",
+      favicon: "./assets/images/silent_speak_favicon.png",
+      backgroundColor: "#ffffff",
+      themeColor: "#4630eb",
     },
     plugins: [
       "expo-router",
