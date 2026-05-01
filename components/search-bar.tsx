@@ -17,7 +17,7 @@ const SearchBar = ({ query, onSearch }: SearchBarProps) => {
 
   return (
     <View
-      className="p-2 flex flex-row bg-white rounded-lg w-full items-center drop-shadow-lg"
+      className="p-2 mb-2 flex flex-row bg-white rounded-lg w-full items-center drop-shadow-lg"
       style={{ backgroundColor: modePalette.primaryBg }}
     >
       <TextInput

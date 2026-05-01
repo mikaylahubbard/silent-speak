@@ -12,6 +12,9 @@ export default {
     newArchEnabled: true,
     extra: {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+      eas: {
+        projectId: "2708f4c6-bb3b-4bf3-beeb-ca932a4d4202",
+      },
     },
     ios: {
       supportsTablet: true,

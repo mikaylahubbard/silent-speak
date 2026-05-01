@@ -1,9 +1,14 @@
 import { useSession } from "@/context";
 import React, { useState } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import {
+  FlatList,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  View,
+} from "react-native";
 import EditCardModal from "../forms/edit-card";
 import CardItem from "./card-item";
-import ExpandedCardOverlay from "./expanded-card";
 
 interface Card {
   id: string | number;
@@ -12,7 +17,7 @@ interface Card {
 }
 
 interface CardListProps {
-  onExpand?: () => void;
+  onExpand?: (card: Card) => void;
   onClose?: () => void;
   cards: any[];
   isEditing: boolean;
@@ -26,28 +31,20 @@ const CardList = ({
   isEditing,
   color,
 }: CardListProps) => {
-  const [activeCard, setActiveCard] = useState<Card | null>(null);
+  // const [activeCard, setActiveCard] = useState<Card | null>(null);
   const [cardToEdit, setCardToEdit] = useState<Card | null>(null);
   const { editCard } = useSession();
 
-  const handleExpand = (card: Card) => {
-    setActiveCard(card);
-    onExpand?.(); // notify parent
-  };
-
-  const handleClose = () => {
-    setActiveCard(null);
-    onClose?.(); // notify parent
-  };
-
-  const handleEditingCard = (card: Card) => {
-    setCardToEdit(card);
-  };
-
-  const closeEditingCard = () => {
-    setCardToEdit(null);
-  };
-
+  // const handleExpand = (card: Card) => {
+  //   setActiveCard(card);
+  //   onExpand?.();
+  // };
+  // const handleClose = () => {
+  //   setActiveCard(null);
+  //   onClose?.();
+  // };
+  const handleEditingCard = (card: Card) => setCardToEdit(card);
+  const closeEditingCard = () => setCardToEdit(null);
   const submitEditingCard = (
     title: string,
     description: string,
@@ -57,38 +54,52 @@ const CardList = ({
     editCard(title, description, id);
   };
 
-  const renderItem = ({ item }: { item: Card }) => {
-    return (
-      <CardItem
-        id={item.id}
-        title={item.title}
-        description={item.description}
-        expand={() => handleExpand(item)}
-        setEditingCard={() => handleEditingCard(item)}
-        isEditing={isEditing}
-        color={color}
-      />
-    );
-  };
-
   return (
     <View className="flex-1">
-      <FlatList
-        data={cards}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            refreshing={false}
-            onRefresh={() => console.log("refreshing...")}
-          />
-        }
-      />
-
-      {activeCard && (
-        <ExpandedCardOverlay card={activeCard} onClose={handleClose} />
+      {Platform.OS === "web" ? (
+        // ScrollView + map , so it works reliably on web
+        <ScrollView>
+          {cards.map((item) => (
+            <CardItem
+              key={item.id.toString()}
+              id={item.id}
+              title={item.title}
+              description={item.description}
+              expand={() => onExpand?.(item)}
+              setEditingCard={() => handleEditingCard(item)}
+              isEditing={isEditing}
+              color={color}
+            />
+          ))}
+        </ScrollView>
+      ) : (
+        // FlatList on native
+        <FlatList
+          data={cards}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <CardItem
+              id={item.id}
+              title={item.title}
+              description={item.description}
+              expand={() => onExpand?.(item)}
+              setEditingCard={() => handleEditingCard(item)}
+              isEditing={isEditing}
+              color={color}
+            />
+          )}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => console.log("refreshing...")}
+            />
+          }
+        />
       )}
 
+      {/* {activeCard && (
+        <ExpandedCardOverlay card={activeCard} onClose={handleClose} />
+      )} */}
       {cardToEdit && (
         <EditCardModal
           visible={true}

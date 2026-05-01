@@ -65,7 +65,11 @@ const Login = () => {
       {/* Welcome Section */}
 
       <Image
-        className="h-36 w-auto"
+        style={{
+          width: 280,
+          height: 144,
+          maxWidth: "80%",
+        }}
         source={require("../assets/images/silent_speak_transparent_logo.png")}
         resizeMode="contain"
       />

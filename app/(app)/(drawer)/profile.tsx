@@ -6,7 +6,7 @@ import { useSession } from "@/context";
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons";
 import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, Switch, Text, View } from "react-native";
-
+const MAX_WIDTH = 680;
 export default function Profile() {
   const {
     userDoc,
@@ -84,118 +84,128 @@ export default function Profile() {
         </Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 20 }}>
-        {/* Personal Info */}
-        <View>
-          <View className="flex-row items-center justify-between">
-            <Text
-              className="font-bold text-xl text-neutral-800"
-              style={{ color: modePalette.primaryText }}
-            >
-              Personal Info
-            </Text>
-            <Pressable onPress={() => setIsEditing(true)}>
-              <MaterialIcons name="create" size={size} color={color} />
-            </Pressable>
-          </View>
-
-          <View
-            className="border-b border-neutral-300 my-2"
-            style={{ borderColor: modePalette.accents }}
-          />
-
-          <Text className="p-3" style={{ color: modePalette.primaryText }}>
-            Username: {profile.name}
-          </Text>
-
-          <Text className="p-3" style={{ color: modePalette.primaryText }}>
-            Phone Number: {profile.phoneNumber ?? "-"}
-          </Text>
-
-          <Text className="p-3" style={{ color: modePalette.primaryText }}>
-            Age: {profile.age ?? "-"}
-          </Text>
-
-          <Pressable onPress={() => setChangePassword(true)}>
-            <Text className="p-3" style={{ color: color }}>
-              Change Password
-            </Text>
-          </Pressable>
-
-          {needsVerified && (
-            <View className="bg-red-100 my-4">
-              <Text className="p-3 font-semibold text-red-600">
-                Warning: Your Email is not verified. You will not be able to
-                change your password until email verification is complete!
-              </Text>
-              <Pressable
-                onPress={handleSentVerifyEmail}
-                className="bg-red-700 w-4/12 max-w-[300px] py-2 m-3 rounded-lg"
+      {/* Centered content column */}
+      <View
+        style={{
+          flex: 1,
+          width: "100%",
+          maxWidth: MAX_WIDTH,
+          alignSelf: "center",
+        }}
+      >
+        <ScrollView contentContainerStyle={{ padding: 20 }}>
+          {/* Personal Info */}
+          <View>
+            <View className="flex-row items-center justify-between">
+              <Text
+                className="font-bold text-xl text-neutral-800"
+                style={{ color: modePalette.primaryText }}
               >
-                <Text className="text-center text-white text-sm">
-                  Verify Email
-                </Text>
+                Personal Info
+              </Text>
+              <Pressable onPress={() => setIsEditing(true)}>
+                <MaterialIcons name="create" size={size} color={color} />
               </Pressable>
             </View>
-          )}
-        </View>
 
-        {/* Settings */}
-        <View>
-          <Text
-            className="font-bold text-xl text-neutral-800 pt-5"
-            style={{ color: modePalette.primaryText }}
-          >
-            Settings
-          </Text>
+            <View
+              className="border-b border-neutral-300 my-2"
+              style={{ borderColor: modePalette.accents }}
+            />
 
-          <View
-            className="border-b border-neutral-300 my-2"
-            style={{ borderColor: modePalette.accents }}
-          />
-
-          <View className="flex-row items-center justify-between">
             <Text className="p-3" style={{ color: modePalette.primaryText }}>
-              Dark Mode
+              Username: {profile.name}
             </Text>
 
-            <Switch
-              trackColor={{ false: "#404040", true: palette[800] }}
-              thumbColor="#f5f5f5"
-              ios_backgroundColor="#404040"
-              onValueChange={switchMode}
-              value={mode === "dark"}
-              style={{ transform: [{ scale: 0.7 }] }}
-            />
+            <Text className="p-3" style={{ color: modePalette.primaryText }}>
+              Phone Number: {profile.phoneNumber ?? "-"}
+            </Text>
+
+            <Text className="p-3" style={{ color: modePalette.primaryText }}>
+              Age: {profile.age ?? "-"}
+            </Text>
+
+            <Pressable onPress={() => setChangePassword(true)}>
+              <Text className="p-3" style={{ color: color }}>
+                Change Password
+              </Text>
+            </Pressable>
+
+            {needsVerified && (
+              <View className="bg-red-100 my-4">
+                <Text className="p-3 font-semibold text-red-600">
+                  Warning: Your Email is not verified. You will not be able to
+                  change your password until email verification is complete!
+                </Text>
+                <Pressable
+                  onPress={handleSentVerifyEmail}
+                  className="bg-red-700 w-4/12 max-w-[300px] py-2 m-3 rounded-lg"
+                >
+                  <Text className="text-center text-white text-sm">
+                    Verify Email
+                  </Text>
+                </Pressable>
+              </View>
+            )}
           </View>
 
-          <Text className="p-3" style={{ color: modePalette.primaryText }}>
-            Select Highlight color:
-          </Text>
+          {/* Settings */}
+          <View>
+            <Text
+              className="font-bold text-xl text-neutral-800 pt-5"
+              style={{ color: modePalette.primaryText }}
+            >
+              Settings
+            </Text>
 
-          <ColorGrid onSelect={setTheme} selected={themeName} />
+            <View
+              className="border-b border-neutral-300 my-2"
+              style={{ borderColor: modePalette.accents }}
+            />
 
-          {/* <Pressable onPress={() => setTheme("green")}>
+            <View className="flex-row items-center justify-between">
+              <Text className="p-3" style={{ color: modePalette.primaryText }}>
+                Dark Mode
+              </Text>
+
+              <Switch
+                trackColor={{ false: "#404040", true: palette[800] }}
+                thumbColor="#f5f5f5"
+                ios_backgroundColor="#404040"
+                onValueChange={switchMode}
+                value={mode === "dark"}
+                style={{ transform: [{ scale: 0.7 }] }}
+              />
+            </View>
+
+            <Text className="p-3" style={{ color: modePalette.primaryText }}>
+              Select Highlight color:
+            </Text>
+
+            <ColorGrid onSelect={setTheme} selected={themeName} />
+
+            {/* <Pressable onPress={() => setTheme("green")}>
             <Text>Switch to greeeeeen</Text>
           </Pressable> */}
-        </View>
-      </ScrollView>
-      <ChangePasswordModal
-        visible={chagePassword}
-        onClose={() => setChangePassword(false)}
-        onSubmit={handleForgotPassword}
-        showEmailInput={false}
-      />
-      <EmailVerificationModal
-        visible={showVerifyModal}
-        onClose={handleCloseModal}
-        onResend={sendNewEmailVerification}
-        user={user}
-      />
-      <EditProfileModal
-        visible={isEditing}
-        onClose={() => setIsEditing(false)}
-      />
+          </View>
+        </ScrollView>
+        <ChangePasswordModal
+          visible={chagePassword}
+          onClose={() => setChangePassword(false)}
+          onSubmit={handleForgotPassword}
+          showEmailInput={false}
+        />
+        <EmailVerificationModal
+          visible={showVerifyModal}
+          onClose={handleCloseModal}
+          onResend={sendNewEmailVerification}
+          user={user}
+        />
+        <EditProfileModal
+          visible={isEditing}
+          onClose={() => setIsEditing(false)}
+        />
+      </View>
     </View>
   );
 }

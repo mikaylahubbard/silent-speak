@@ -1,17 +1,19 @@
+import NewCardModal from "@/components/forms/new-card";
 import { useSession } from "@/context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-
-import NewCardModal from "@/components/forms/new-card";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import CardList from "../../../components/cards/card-list";
+import ExpandedCardOverlay from "../../../components/cards/expanded-card";
 import SearchBar from "../../../components/search-bar";
+
+const MAX_WIDTH = 680;
 
 const HomeScreen = () => {
   const [blurred, setBlurred] = useState(false);
-  //get the user document/data
-  const { userDoc, cards, addCard, palette, modePalette } = useSession();
+  const [activeCard, setActiveCard] = useState<any | null>(null);
+  const { cards, addCard, palette, modePalette } = useSession();
   const [editingMode, setEditingMode] = useState(false);
   const [newCardMode, setNewCardMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,61 +22,118 @@ const HomeScreen = () => {
 
   const filteredAndSortedCards = React.useMemo(() => {
     return [...(cards || [])]
-      .filter(
-        (card) => card.title.toLowerCase().includes(searchQuery.toLowerCase()),
-        // || card.description.toLowerCase().includes(searchQuery.toLowerCase()),
+      .filter((card) =>
+        card.title.toLowerCase().includes(searchQuery.toLowerCase()),
       )
       .sort((a, b) =>
         a.title.toLowerCase().localeCompare(b.title.toLowerCase()),
       );
   }, [cards, searchQuery]);
 
+  const handleExpand = (card: any) => {
+    setActiveCard(card);
+    setBlurred(true);
+  };
+
+  const handleClose = () => {
+    setActiveCard(null);
+    setBlurred(false);
+  };
+
   return (
-    <View
-      className="flex-1 px-4 pt-2 bg-white"
-      style={{ backgroundColor: modePalette.primaryBg }}
-    >
-      {/* NEEDS IMPLEMENTED */}
-      <SearchBar query={searchQuery} onSearch={setSearchQuery} />
+    <View className="flex-1" style={{ backgroundColor: modePalette.primaryBg }}>
+      {/* Centered content column */}
+      <View
+        style={{
+          flex: 1,
+          width: "100%",
+          maxWidth: MAX_WIDTH,
+          alignSelf: "center",
+          paddingHorizontal: 16,
+          paddingTop: 8,
+        }}
+      >
+        <SearchBar query={searchQuery} onSearch={setSearchQuery} />
+        <CardList
+          onExpand={handleExpand}
+          onClose={handleClose}
+          cards={filteredAndSortedCards}
+          isEditing={editingMode}
+          color={color}
+        />
+      </View>
 
-      <CardList
-        onExpand={() => setBlurred(true)}
-        onClose={() => setBlurred(false)}
-        cards={filteredAndSortedCards}
-        isEditing={editingMode}
-        color={color}
-      />
+      {/* Blur sits above cards, below expanded card */}
+      {blurred &&
+        (Platform.OS === "web" ? (
+          <View
+            style={[
+              StyleSheet.absoluteFillObject,
+              { backgroundColor: "rgba(0,0,0,0.4)" },
+            ]}
+            pointerEvents="none"
+          />
+        ) : (
+          <BlurView
+            intensity={40}
+            tint="dark"
+            style={StyleSheet.absoluteFillObject}
+            pointerEvents="none"
+          />
+        ))}
 
-      <View className="absolute inset-3 justify-end px-6 pb-6">
-        {editingMode && (
-          <Pressable
-            className=" w-4/12 max-w-[300px] py-3 rounded-lg ml-auto my-5"
-            style={{ backgroundColor: color }}
-            onPress={() => setEditingMode(false)}
-          >
-            <Text className="text-white text-base font-semibold text-center">
-              Done Editing
-            </Text>
-          </Pressable>
-        )}
-        <View className="flex-row justify-between">
-          {/* add a card */}
-          <Pressable
-            className="bg-white p-2 rounded-full shadow-slate-100"
-            style={{ backgroundColor: modePalette.tertiaryBg }}
-            onPress={() => setNewCardMode(true)}
-          >
-            <MaterialIcons name="add" size={size} color={color} />
-          </Pressable>
+      {/*  Expanded card on top of blur */}
+      {activeCard && (
+        <ExpandedCardOverlay card={activeCard} onClose={handleClose} />
+      )}
 
-          {/* enter edit mode: this should allow you to delete or edit individual cards */}
-          <Pressable
-            className="bg-white p-2 rounded-full shadow-slate-100"
-            style={{ backgroundColor: modePalette.tertiaryBg }}
-            onPress={() => setEditingMode(true)}
-          >
-            <MaterialIcons name="create" size={size} color={color} />
-          </Pressable>
+      {/* FAB buttons — centered and constrained */}
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          alignItems: "center",
+        }}
+        pointerEvents="box-none"
+      >
+        <View
+          style={{
+            width: "100%",
+            maxWidth: MAX_WIDTH,
+            paddingHorizontal: 24,
+            paddingBottom: 24,
+          }}
+          pointerEvents="box-none"
+        >
+          {editingMode && (
+            <Pressable
+              className="w-4/12 max-w-[300px] py-3 rounded-lg ml-auto my-5"
+              style={{ backgroundColor: color }}
+              onPress={() => setEditingMode(false)}
+            >
+              <Text className="text-white text-base font-semibold text-center">
+                Done Editing
+              </Text>
+            </Pressable>
+          )}
+          <View className="flex-row justify-between" pointerEvents="box-none">
+            <Pressable
+              className="p-2 rounded-full"
+              style={{ backgroundColor: modePalette.tertiaryBg }}
+              onPress={() => setNewCardMode(true)}
+            >
+              <MaterialIcons name="add" size={size} color={color} />
+            </Pressable>
+            <Pressable
+              className="p-2 rounded-full"
+              style={{ backgroundColor: modePalette.tertiaryBg }}
+              onPress={() => setEditingMode(true)}
+            >
+              <MaterialIcons name="create" size={size} color={color} />
+            </Pressable>
+          </View>
         </View>
       </View>
 
@@ -83,18 +142,8 @@ const HomeScreen = () => {
         onClose={() => setNewCardMode(false)}
         onSubmit={addCard}
       />
-
-      {blurred && (
-        <BlurView
-          intensity={40}
-          tint="dark"
-          style={StyleSheet.absoluteFillObject}
-        />
-      )}
     </View>
   );
 };
-
-const fetchData = async () => {};
 
 export default HomeScreen;

@@ -27,7 +27,12 @@ export default function DrawerLayout() {
     // add more variants as needed
   };
   const LogoTitle = () => (
-    <Image className="w-36 h-auto" source={images[mode]} resizeMode="contain" />
+    <Image
+      // className="w-36 h-auto"
+      style={{ width: 144, height: 36 }}
+      source={images[mode]}
+      resizeMode="contain"
+    />
   );
   const handleLogout = async () => {
     await signOut();

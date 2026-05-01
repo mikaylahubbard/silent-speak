@@ -66,7 +66,12 @@ const Register = () => {
     <View className="flex-1 justify-center items-center p-4">
       {/* Welcome Section */}
       <Image
-        className="h-28 w-auto"
+        // className="h-28 w-auto"
+        style={{
+          width: 280,
+          height: 144,
+          maxWidth: "80%",
+        }}
         source={require("../assets/images/silent_speak_transparent_logo.png")}
         resizeMode="contain"
       />
