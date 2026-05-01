@@ -267,6 +267,7 @@ export function SessionProvider(props: { children: React.ReactNode }) {
         sessionInitializedRef.current = false;
       } else {
         activeUserRef.current = null;
+        sessionInitializedRef.current = false;
         setUser(null);
         setUserDoc(null);
         setCards([]);
@@ -374,14 +375,15 @@ export function SessionProvider(props: { children: React.ReactNode }) {
   ) => {
     try {
       setError(null);
+      sessionInitializedRef.current = true;
       const response = await register(email, password, name);
 
       if (response?.user) {
         // force-refresh the token
         await response.user.getIdToken(true);
-        sessionInitializedRef.current = true; // block the listener
+        // sessionInitializedRef.current = true; // block the listener
         await ensureUserDocument(response.user, name);
-        isInitializingRef.current = false; // ensure clean state before logout
+        // isInitializingRef.current = false;
         await logout();
       }
       return response?.user;
