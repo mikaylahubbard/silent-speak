@@ -64,6 +64,7 @@ export default function DrawerLayout() {
         <Drawer.Screen
           name="index"
           options={{
+            headerShadowVisible: false,
             drawerLabel: "Home",
             title: "My Cards",
             headerTitle: () => <LogoTitle />,

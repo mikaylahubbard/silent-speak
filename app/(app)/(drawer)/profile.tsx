@@ -2,10 +2,11 @@ import ColorGrid from "@/components/colorGrid";
 import EditProfileModal from "@/components/forms/edit-profile";
 import EmailVerificationModal from "@/components/forms/email-verification";
 import ChangePasswordModal from "@/components/forms/password-reset";
+import { Toggle } from "@/components/toggle";
 import { useSession } from "@/context";
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons";
 import React, { useEffect, useState } from "react";
-import { Pressable, ScrollView, Switch, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 const MAX_WIDTH = 680;
 export default function Profile() {
   const {
@@ -52,6 +53,8 @@ export default function Profile() {
   const handleCloseModal = async () => {
     setShowVerifyModal(false);
   };
+
+  //
 
   useEffect(() => {
     if (user) {
@@ -168,13 +171,19 @@ export default function Profile() {
                 Dark Mode
               </Text>
 
-              <Switch
+              {/* <Switch
                 trackColor={{ false: "#404040", true: palette[600] }}
                 thumbColor="#f5f5f5"
                 ios_backgroundColor="#404040"
                 onValueChange={switchMode}
                 value={mode === "dark"}
                 style={{ transform: [{ scale: 0.7 }] }}
+              /> */}
+
+              <Toggle
+                value={mode === "dark"}
+                onValueChange={switchMode}
+                activeColor={palette[600]}
               />
             </View>
 
