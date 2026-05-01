@@ -27,7 +27,7 @@ export default function Profile() {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [needsVerified, setNeedsVerified] = useState(user?.emailVerified);
   const size = 28;
-  const color = palette[600];
+  const color = palette[700];
 
   const checkEmailVerificationStatus = async () => {
     if (!user) return;
@@ -169,7 +169,7 @@ export default function Profile() {
               </Text>
 
               <Switch
-                trackColor={{ false: "#404040", true: palette[800] }}
+                trackColor={{ false: "#404040", true: palette[600] }}
                 thumbColor="#f5f5f5"
                 ios_backgroundColor="#404040"
                 onValueChange={switchMode}

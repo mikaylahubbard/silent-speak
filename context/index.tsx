@@ -93,7 +93,7 @@ interface AuthContextType {
   error: string | null;
   clearError: () => void;
   sendNewEmailVerification: (user: User) => void;
-  palette: typeof PALETTES.violet;
+  palette: typeof PALETTES.violet.light;
   themeName: string;
   setTheme: (theme: string) => Promise<void>;
   modePalette: typeof MODES.light;
@@ -527,10 +527,13 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     await sendEmailVerification(user);
   };
 
-  // Theme colors
+  // Theme colors & Mode
+
   const themeName: keyof typeof PALETTES =
     userDoc?.settings?.colorTheme ?? "violet";
-  const palette = PALETTES[themeName] ?? PALETTES["violet"];
+  const mode: "light" | "dark" = userDoc?.settings?.theme ?? "light";
+
+  const palette = PALETTES[themeName]?.[mode] ?? PALETTES["violet"][mode];
 
   const setTheme = async (newTheme: string) => {
     if (!user) {
@@ -550,7 +553,6 @@ export function SessionProvider(props: { children: React.ReactNode }) {
     }));
   };
 
-  const mode: "light" | "dark" = userDoc?.settings?.theme ?? "light";
   const modePalette = MODES[mode];
 
   const switchMode = async () => {

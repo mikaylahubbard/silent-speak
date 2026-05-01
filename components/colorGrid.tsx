@@ -1,4 +1,5 @@
 import { useSession } from "@/context";
+import { PALETTES } from "@/theme/colorThemes";
 import React from "react";
 import { Pressable, View } from "react-native";
 
@@ -7,25 +8,26 @@ type ColorOption = {
   color: string;
 };
 
-const colorOptionsData: ColorOption[] = [
-  { themeName: "red", color: "bg-red-500" },
-  { themeName: "orange", color: "bg-orange-500" },
-  { themeName: "yellow", color: "bg-yellow-500" },
-  { themeName: "emerald", color: "bg-emerald-500" },
-  { themeName: "cyan", color: "bg-cyan-500" },
-  { themeName: "blue", color: "bg-blue-500" },
-  { themeName: "violet", color: "bg-violet-500" },
-  { themeName: "fuchsia", color: "bg-fuchsia-500" },
-  { themeName: "pink", color: "bg-pink-500" },
-];
-
 type Props = {
   selected?: string;
   onSelect: (theme: string) => void;
 };
 
 const ColorGrid = ({ selected, onSelect }: Props) => {
-  const { modePalette } = useSession();
+  const { modePalette, mode } = useSession();
+
+  const colorOptionsData: ColorOption[] = [
+    { themeName: "red", color: PALETTES["red"][mode][500] },
+    { themeName: "orange", color: PALETTES["orange"][mode][500] },
+    { themeName: "yellow", color: PALETTES["yellow"][mode][500] },
+    { themeName: "emerald", color: PALETTES["emerald"][mode][500] },
+    { themeName: "cyan", color: PALETTES["cyan"][mode][500] },
+    { themeName: "blue", color: PALETTES["blue"][mode][500] },
+    { themeName: "violet", color: PALETTES["violet"][mode][500] },
+    { themeName: "fuchsia", color: PALETTES["fuchsia"][mode][500] },
+    { themeName: "pink", color: PALETTES["pink"][mode][500] },
+  ];
+
   return (
     <View className="flex-row flex-wrap justify-center">
       {colorOptionsData.map((item) => {
@@ -44,7 +46,10 @@ const ColorGrid = ({ selected, onSelect }: Props) => {
                   : modePalette.primaryBg
               }`}
             >
-              <View className={`w-20 h-20 rounded-lg ${item.color}`} />
+              <View
+                className="w-20 h-20 rounded-lg"
+                style={{ backgroundColor: item.color }}
+              />
             </View>
           </Pressable>
         );
